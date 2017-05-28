@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/sigma.min.js"></script>
+		<script src="js/plugins/sigma.parsers.json.min.js"></script>
+		<script src="js/plugins/sigma.layout.forceAtlas2.min.js"></script>
+		<script src="js/opentip-jquery.min.js"></script>		
+		<script src="js/r2v.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/r2v.css">
+		<script src="js/adapter-jquery.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/opentip.css">
+		<script src="js/plugins/sigma.plugins.neighborhoods.min.js"></script>	
+		<script src="js/jsrender.min.js"></script>
+		<script src="js/jsviews.min.js"></script>			
+	</head>
+	<body>
+		<div id="r2v">
+			<div id="bonus">
+				<div id="bonusInner">
+					<div class="bonus blue" id="b1"></div>
+					<div class="bonus yellow" id="b2"></div>
+					<div class="bonus _red" id="b3"></div>
+					<div class="bonus _red" id="b4"></div>
+					<div class="bonus _green" id="b5"></div>					
+					<div class="bonus _red" id="b6"></div>
+					<div class="bonus _yellow" id="b7"></div>																																							
+				</div>
+			</div>
+			<div id="panel">
+				<div id="top-panel">
+					<div id="timer">
+						<div id="timerInner">88</div>
+					</div>
+					<div id="score">
+						<div id="scoreInner">8888</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div id="mid-panel">
+					<input class="sbut" id="sbut1" type="button"/>
+					<input class="sbut" id="sbut2" type="button"/>
+					<input class="sbut" id="sbut3" type="button"/>
+					<input class="sbut" id="sbut4" type="button"/>
+					<input class="sbut" id="sbut5" type="button"/>
+					<input class="sbut" id="sbut6" type="button"/>					
+				</div>
+				<div id="bottom-panel">
+					<div id="control">
+						<div id="controlInner">
+							<table class="score-table">
+								<thead>
+									<tr>
+										<th>Player</th>
+										<th>Score</th>
+										<th>Credits</th>
+										<th>Stars</th>
+									</tr>
+								<thead>
+								<tbody id="scoresBody"></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div data-ot="The content" id="tip" data-ot-delay="2" style="display: none"></div>
+			<div id="tipPlaceholder" style="display: none"></div>
+		</div>
+		
+		<div id="nodeTip"></div>
+		
+	<script id="scoresT" type="text/x-jsrender">
+	{^{for players}}
+		<tr>
+			<td data-th="Players">{^{:name}}</td>
+			<td data-th="Scores">{^{:score}}</td>
+			<td data-th="Scores">{^{:credits}}</td>
+			<td data-th="Scores">{^{:visited}}</td>
+		</tr>
+	{{/for}}
+	</script>
+	
+	<script id="nodeTipT" type="text/x-jsrender">
+	<table class="tipTable">
+		<thead>
+			<tr>
+				<th>Total</th>
+				<th>{{:total}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{for playerGroups}}
+			<tr>
+				<td>{{:playerType}}</td>
+				<td>{{:number}}</td>
+			</tr>
+			{{/for}}
+		</tbody>
+	</table>
+	</script>		
+		
+	</body>
+</html>

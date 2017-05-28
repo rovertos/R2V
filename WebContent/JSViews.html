@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="ISO-8859-1">
+		<title>Insert title here</title>
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/jsrender.min.js"></script>
+		<script src="js/jquery.views.min.js"></script>
+</head>
+<body>
+  <!-- Provide container for rendered template output: -->
+  <div id="result"></div>
+
+  <!-- Declare a JsRender template, in a script block: -->
+  <script id="myTmpl" type="text/x-jsrender">{{:name}}</script>
+
+  <script>
+    var tmpl = $.templates("#myTmpl"); // Get compiled template
+    var data = {name: "Jo"};           // Define data
+    var html = tmpl.render(data);      // Render template using data - as HTML string
+    $("#result").html(html);           // Insert HTML string into DOM
+  </script>
+  
+
+  
+</body>
+</html>

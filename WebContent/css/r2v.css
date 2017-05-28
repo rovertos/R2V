@@ -1,0 +1,362 @@
+@CHARSET "ISO-8859-1";
+
+@font-face {font-family: Ken; src: url(../fonts/kenvector_future_thin.ttf); }
+
+#r2v {
+		
+	width: 100%;
+	height: 100%;	
+	
+    position: absolute;
+    top:50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+	z-index: 0;
+	
+    margin: auto;
+    
+    font-family: Ken;
+	
+}
+
+.sbut {
+	
+	width: 49px;
+	
+	height: 49px;
+	
+	border:none;
+	
+	margin-right: 10px;	
+	
+}
+
+.sbut:active {
+	
+	width: 49px;
+	
+	height: 45px;
+	
+	margin-top: 4px;
+	
+	border:none;
+	
+}
+
+#sbut1 {
+	
+	background:url(../img/yellow_button07.png) no-repeat;	
+	
+}
+
+#sbut1:active {
+	
+	background:url(../img/yellow_button08.png) no-repeat;	
+	
+}
+
+#sbut2 {
+	
+	background:url(../img/green_button07.png) no-repeat;	
+	
+}
+
+#sbut2:active {
+	
+	background:url(../img/green_button08.png) no-repeat;	
+	
+}
+
+#sbut3 {
+	
+	background:url(../img/green_button07.png) no-repeat;	
+	
+}
+
+#sbut3:active {
+	
+	background:url(../img/green_button08.png) no-repeat;	
+	
+}
+
+#sbut4 {
+	
+	background:url(../img/blue_button07.png) no-repeat;	
+	
+}
+
+#sbut4:active {
+	
+	background:url(../img/blue_button08.png) no-repeat;	
+	
+}
+
+#sbut5 {
+	
+	background:url(../img/blue_button07.png) no-repeat;	
+	
+}
+
+#sbut5:active {
+	
+	background:url(../img/blue_button08.png) no-repeat;	
+	
+}
+
+#sbut6 {
+	
+	background:url(../img/red_button04.png) no-repeat;	
+	
+}
+
+#sbut6:active {
+	
+	background:url(../img/red_button05.png) no-repeat;
+	
+}
+
+.sbut.disabled {
+	
+	background:url(../img/grey_button10.png) no-repeat !important;
+	
+}
+
+#screen {
+	
+    width: 450px;
+    
+    height: 612px;
+    
+    background-image: url('../img/S450x600.png');
+    
+    float: left;
+
+}
+
+#container {
+	
+	padding-top: 12px;
+	
+    width: 450px;
+    
+    height: 588px;
+
+}
+
+#panel {
+	
+    float: right;
+    
+    position: relative;
+    
+    z-index: 1;
+    
+    margin-right: 50px;
+
+}
+
+#bonus {
+	
+    float: left;
+    
+    z-index: 1;
+	
+}
+
+.bonus {
+	
+    width: 50px;
+    
+    height: 50px;
+    
+    background-image: url('../img/metalPanelS.png');
+    
+    margin-left: 30px;
+    
+    margin-top: 10px;
+	
+}
+
+.bonus.red {
+	
+    background-image: url('../img/red_panelS.png');	
+	
+}
+
+.bonus.green {
+	
+    background-image: url('../img/green_panelS.png');	
+	
+}
+
+.bonus.yellow {
+	
+    background-image: url('../img/yellow_panelS.png');	
+	
+}
+
+.bonus.blue {
+	
+    background-image: url('../img/blue_panelS.png');	
+	
+}
+
+.bonus._red {
+	
+    background-image: url('../img/metalPanel_redCornerS.png');	
+	
+}
+
+.bonus._green {
+	
+    background-image: url('../img/metalPanel_greenCornerS.png');	
+	
+}
+
+.bonus._yellow {
+	
+    background-image: url('../img/metalPanel_yellowCornerS.png');	
+	
+}
+
+.bonus._blue {
+	
+    background-image: url('../img/metalPanel_blueCornerS.png');	
+	
+}
+
+#b4 {
+	
+    margin-top: 26px;	
+	
+}
+
+#b6 {
+	
+    margin-top: 26px;	
+	
+}
+
+#top-panel {
+	
+	margin-top: 10px;
+	
+}
+
+#mid-panel {
+	
+	margin-top: 20px;
+	
+}
+
+#bottom-panel {
+	
+	margin-top: 20px;
+	
+}
+
+#timer {
+	
+    width: 100px;
+    
+    height: 100px;
+    
+    background-image: url('../img/red_panel.png');
+    
+    float: left;
+	
+}
+
+#timerInner {
+	
+    padding-top: 15px;
+    
+	font-size: 4em;
+	
+	color: white;
+	
+	text-align: right;
+	
+}
+
+#score {
+	
+    width: 280px;
+    
+    height: 100px;
+    
+    margin-left: 120px;
+    
+    background-image: url('../img/M280x100.png');  	
+	
+}
+
+#scoreInner {
+	
+    padding-top: 20px;
+    
+	text-align: center;
+	
+	font-size: 2em;	
+	
+}
+
+#control {
+	
+	padding-top: 5px;
+	
+    width: 400px;
+    
+    height: 595px;
+    
+    background-image: url('../img/S400x600.png');
+	
+}
+
+#controlInner {
+	
+    padding: 10px;
+    
+    height: 570px;
+    
+    width: 100%;
+    
+    overflow-y: auto;
+	
+}
+
+.clear {
+	
+      clear: both;
+      
+}
+
+.spacer {
+	
+	height: 10px;
+	
+}
+
+body {
+	
+	background-image: url('../img/stardust.png');
+	
+}
+
+.score-table {
+	
+	width: 95%;
+	
+	text-align: left;
+	
+    background: white;	
+	
+}
+
+.score-table tr:nth-child(odd) {
+	
+    background: silver;
+    
+}
