@@ -9,6 +9,9 @@ import java.util.List;
 import board.Board;
 import board.Star;
 import player.Player;
+import player.RandomBot;
+import player.RobotTypes;
+import player.RushBot;
 
 public class FactoryJSON {
 
@@ -19,6 +22,8 @@ public class FactoryJSON {
 		Iterator<Star> iter = board.getConstellation().vertexSet().iterator();
 		
 		ArrayList<CrowdJSON> crowds = new ArrayList<CrowdJSON>();
+		
+		HashMap<String,Integer> robotsMap = new HashMap<String,Integer>();
 		
 		while (iter.hasNext()){
 			
@@ -54,6 +59,18 @@ public class FactoryJSON {
 					
 				}
 				
+				if (robotsMap.containsKey(playerType)){
+					
+					Integer count = robotsMap.get(playerType);
+					
+					robotsMap.put(playerType, new Integer(count.intValue() + 1));
+					
+				} else {
+					
+					robotsMap.put(playerType, new Integer(1));
+					
+				}
+				
 			}
 			
 			ArrayList<PlayerGroupJSON> playerGroupList = new ArrayList<PlayerGroupJSON>(groupMap.values());
@@ -61,7 +78,7 @@ public class FactoryJSON {
 			crowd.setTotal(sittingPlayers.size());
 			
 			crowd.setPlayerGroups(playerGroupList);
-			
+						
 			crowds.add(crowd);
 			
 		}
@@ -95,6 +112,36 @@ public class FactoryJSON {
 		}
 		
 		position.setPlayers(rankedPlayers);
+		
+		//TODO: PROPERLY Use enum for robot types 
+		
+		ArrayList<RobotsJSON> robots = new ArrayList<RobotsJSON>();
+		
+		for (RobotTypes rt: RobotTypes.values()){
+			
+			if (robotsMap.containsKey(rt.toString())){
+				
+				RobotsJSON rjson = new RobotsJSON();
+				
+				rjson.setType(rt.toString());
+				
+				rjson.setActives(robotsMap.get(rt.toString()).intValue());
+				
+				switch(rt.toString()){
+					
+					case(RandomBot.TYPE): rjson.setInitial(RandomBot.INITIAL); break;
+					
+					case(RushBot.TYPE): rjson.setInitial(RushBot.INITIAL);
+					
+				}
+				
+				robots.add(rjson);
+				
+			}
+			
+		}
+			
+		position.setRobots(robots);
 		
 		return position;
 		

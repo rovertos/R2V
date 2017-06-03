@@ -319,7 +319,19 @@
 	
     padding: 10px;
     
-    height: 570px;
+    height: 100px;
+    
+    width: 100%;
+    
+    overflow-y: auto;
+	
+}
+
+#controlInner2 {
+	
+    padding: 10px;
+    
+    height: 450px;
     
     width: 100%;
     

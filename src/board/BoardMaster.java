@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import player.RandomBot;
 import player.Robot;
+import player.RushBot;
 import transition.CrowdMovement;
 
 public class BoardMaster {
@@ -88,13 +89,15 @@ public class BoardMaster {
 	}
 	
 	
-	public void sitThePlayers(String startingNodeId, int startingCredits, int totRandomBots){
+	public void sitThePlayers(String startingNodeId, int startingCredits, int totRandomBots, int totRushBots){
 		
 		Star startingStar = this.board.getStar(startingNodeId);
 		
 		this.board.setStartingStar(startingStar);
 		
 		ArrayList<Robot> robots = new ArrayList<Robot>();
+		
+		RandomBot.INITIAL = totRandomBots;
 		
 		for (int i=0; i<totRandomBots; i++){
 			
@@ -103,6 +106,16 @@ public class BoardMaster {
 			robots.add(rndbot);
 			
 		}
+		
+		RushBot.INITIAL = totRushBots;
+		
+		for (int i=0; i<totRushBots; i++){
+			
+			RushBot rushbot = new RushBot("RUSH-" + i, startingStar, startingCredits);
+			
+			robots.add(rushbot);
+			
+		}		
 		
 		board.setRobots(robots);
 		

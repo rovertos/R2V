@@ -64,6 +64,6 @@ public class Board {
 
 	public void setStarHopper(StarHopper starHopper) {
 		this.starHopper = starHopper;
-	}	
+	}
 	
 }

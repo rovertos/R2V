@@ -37,6 +37,8 @@ public class GameInitializer extends HttpServlet {
 		
 		int totRandomBots = Integer.parseInt(request.getParameter("rnds"));
 		
+		int totRushBots = Integer.parseInt(request.getParameter("rush"));		
+		
 		System.out.println("========= INITIALIZING =========");
 		
 		System.out.println("exportMin="+exportMin);
@@ -47,11 +49,13 @@ public class GameInitializer extends HttpServlet {
 		
 		System.out.println("totRandomBots="+totRandomBots);
 		
+		System.out.println("totRushBots="+totRushBots);
+		
 		BoardMaster boardMaster = BoardMaster.getInstance();
 		
 		boardMaster.layTheBoard(exportMin);
 		
-		boardMaster.sitThePlayers(startingNodeId, startingCredits, totRandomBots);
+		boardMaster.sitThePlayers(startingNodeId, startingCredits, totRandomBots, totRushBots);
 		
 	}
 

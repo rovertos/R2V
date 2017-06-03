@@ -12,6 +12,8 @@ public class PositionJSON implements Serializable {
 	private StarHopperJSON starHopper;
 	
 	private List<RankedPlayerJSON> players;
+	
+	private List<RobotsJSON> robots;
 
 	public List<CrowdJSON> getCrowds() {
 		return crowds;
@@ -35,6 +37,14 @@ public class PositionJSON implements Serializable {
 
 	public void setPlayers(List<RankedPlayerJSON> players) {
 		this.players = players;
+	}
+
+	public List<RobotsJSON> getRobots() {
+		return robots;
+	}
+
+	public void setRobots(List<RobotsJSON> robots) {
+		this.robots = robots;
 	}	
 	
 }

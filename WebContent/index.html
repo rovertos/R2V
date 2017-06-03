@@ -51,6 +51,18 @@
 							<table class="score-table">
 								<thead>
 									<tr>
+										<th>Robots</th>
+										<th>Active</th>
+										<th>Initial</th>
+									</tr>
+								<thead>
+								<tbody id="robotsBody"></tbody>							
+							</table>
+						</div>
+						<div id="controlInner2">
+							<table class="score-table">
+								<thead>
+									<tr>
 										<th>Player</th>
 										<th>Score</th>
 										<th>Credits</th>
@@ -72,13 +84,23 @@
 	<script id="scoresT" type="text/x-jsrender">
 	{^{for players}}
 		<tr>
-			<td data-th="Players">{^{:name}}</td>
+			<td class="player" data-th="Players">{^{:name}}</td>
 			<td data-th="Scores">{^{:score}}</td>
-			<td data-th="Scores">{^{:credits}}</td>
-			<td data-th="Scores">{^{:visited}}</td>
+			<td data-th="Credits">{^{:credits}}</td>
+			<td data-th="Stars">{^{:visited}}</td>
 		</tr>
 	{{/for}}
 	</script>
+	
+	<script id="robotsT" type="text/x-jsrender">
+	{^{for robots}}
+		<tr>
+			<td class="robot" data-th="Robots">{^{:type}}</td>
+			<td data-th="Active">{^{:actives}}</td>
+			<td data-th="Initial">{^{:initial}}</td>
+		</tr>
+	{{/for}}
+	</script>	
 	
 	<script id="nodeTipT" type="text/x-jsrender">
 	<table class="tipTable">

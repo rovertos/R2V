@@ -39,7 +39,11 @@ Game = {
 	history: [],
 	
 	scoresTmpl: null,
-		
+	
+	robotsTmpl: null,
+	
+	posPlayers: null,
+	
 	init: function(){
 		
 		var exportMin = Graph.exportMin();
@@ -47,7 +51,7 @@ Game = {
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/init",
-		    data: { min: exportMin, start: Config.startingNodeId, creds: Config.startingCredits, rnds: Config.totRandomBots},
+		    data: { min: exportMin, start: Config.startingNodeId, creds: Config.startingCredits, rnds: Config.totRandomBots, rush: Config.totRushBots},
 		    dataType: "html",
 		    success: function(data) {
 		    	
@@ -87,6 +91,8 @@ Game = {
 			
 			$.observable(Game.position).setProperty("players",data.players);
 			
+			$.observable(Game.position).setProperty("robots",data.robots);
+			
 		}
 		
 		if (Game.scoresTmpl == null){
@@ -97,9 +103,29 @@ Game = {
 			
 		}
 		
+		if (Game.robotsTmpl == null){
+			
+			Game.robotsTmpl = $.templates("#robotsT");
+			
+			Game.robotsTmpl.link("#robotsBody",Game.position);	
+			
+		}
+		
+		$(".player").hover(Control.overPlayer, Control.outPlayer);
+		
+		$(".robot").hover(Control.overRobot, Control.outRobot);
+		
 		Game.history.push(Game.position);
 		
-		Game.adjustNodeSizes(Game.position.crowds);
+		Graph.adjustNodeSizes(Game.position.crowds);
+		
+		Game.posPlayers = [];
+		
+		$.each(Game.position.players, function(i,val){
+			
+			Game.posPlayers[val.name] = val;
+			
+		});
 		
 	},
 	
@@ -117,18 +143,6 @@ Game = {
 		
 			window.clearInterval(Game.interval);
 		
-	},
-	
-	adjustNodeSizes: function(crowds){
-		
-		$.each(crowds, function(i,val){
-			
-			Graph.scaleNode(val.starId, val.total);
-			
-		});
-		
-		Graph.s.refresh({ skipIndexation: true });
-		
 	}
 		
 }
@@ -137,7 +151,7 @@ Config = {
 		
 	costMultiplier: 1,
 	
-	stayingBonus: 0,
+	stayingBonus: 10,
 	
 	newStarScore: 20,
 	
@@ -145,8 +159,84 @@ Config = {
 	
 	startingCredits: 1000,
 	
-	totRandomBots: 100		
+	totRandomBots: 80,
+	
+	totRushBots: 20		
 		
+}
+
+Control = {
+		
+	playerTrc: null,
+	
+	overPlayer: function(event){
+		
+		Control.playerTrc = $(this).text();
+		
+		$(this).parent().css('background-color', 'LightBlue');
+		
+		Graph.s.graph.nodes(Game.posPlayers[Control.playerTrc].position).color = '#1E90FF';
+		
+		Graph.s.refresh({ skipIndexation: true });
+		
+	},
+	
+	outPlayer: function(event){
+		
+		$(this).parent().css('background-color', '');
+		
+		Graph.s.graph.nodes(Game.posPlayers[Control.playerTrc].position).color = Graph.defaultNodeColor;
+		
+		Graph.s.refresh({ skipIndexation: true });
+		
+	},
+	
+	overRobot: function(event){
+		
+		var robotType = $(this).text();
+		
+		$(this).parent().css('background-color', 'LightBlue');
+		
+		$.each(Graph.s.graph.nodes(),function(index,node){
+
+			node.size = 10;
+			
+		});
+		
+		$.each(Game.position.crowds, function(i,crval){
+			
+			$.each(crval.playerGroups, function(i,pgval){
+				
+				if (pgval.playerType == robotType){
+					
+					Graph.s.graph.nodes(crval.starId).color = '#1E90FF';
+					
+					Graph.scaleNode(crval.starId, pgval.number, 4);
+					
+				}
+				
+			});
+			
+		});
+		
+		Graph.s.refresh({ skipIndexation: true });		
+		
+	},
+	
+	outRobot: function(event){
+		
+		$(this).parent().css('background-color', '');
+		
+		$.each(Graph.s.graph.nodes(),function(index,node){
+
+			node.color = Graph.defaultNodeColor;
+			
+		});		
+		
+		Graph.adjustNodeSizes(Game.position.crowds);
+		
+	} 
+	
 }
 
 NodeTip = {
@@ -175,10 +265,6 @@ NodeTip = {
 			var starCrowds;
 			
 			$.each(Game.position.crowds, function(i,val){
-				
-				console.log(val);
-				
-				Graph.scaleNode(val.starId, val.total);
 				
 				if (val.starId == e.data.node.id){
 					
@@ -214,16 +300,19 @@ Graph = {
 		
 	s: null,
 	
+	defaultNodeColor: '#ec5148',
+	
 	init: function(data){
 		
 		Graph.s = new sigma({ 
             graph: data,
             container: 'r2v',
             settings: {
-                defaultNodeColor: '#ec5148',
+                defaultNodeColor: Graph.defaultNodeColor,
                 font: 'Ken',
                 hoverFont: 'Ken',
-                labelHoverBGColor: 'node'
+                labelHoverBGColor: 'node',
+                edgeColor: 'default'
             }
     	});
     	
@@ -272,9 +361,21 @@ Graph = {
 		
 	},
 	
-	scaleNode: function(nodeId, crowdSize){
+	scaleNode: function(nodeId, crowdSize, intensity){
 		
-		Graph.s.graph.nodes(nodeId).size = 10 + crowdSize;
+		Graph.s.graph.nodes(nodeId).size = 10 + crowdSize * intensity;
+		
+	},
+	
+	adjustNodeSizes: function(crowds){
+		
+		$.each(crowds, function(i,val){
+			
+			Graph.scaleNode(val.starId, val.total, 1);
+			
+		});
+		
+		Graph.s.refresh({ skipIndexation: true });
 		
 	}
 
