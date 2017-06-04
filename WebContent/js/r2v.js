@@ -1,6 +1,130 @@
 
 $(document).ready(function(){
 	
+	sigma.utils.pkg('sigma.canvas.nodes');
+	
+	sigma.canvas.nodes.image = (function() {
+	  var _cache = {},
+	      _loading = {},
+	      _callbacks = {};
+
+	  // Return the renderer itself:
+	  var renderer = function(node, context, settings) {
+		  
+	    var args = arguments,
+	        prefix = settings('prefix') || '',
+	        size = node[prefix + 'size'],
+	        color = node.color || settings('defaultNodeColor'),
+	        url = node.url;
+
+	    if (_cache[url]) {
+	      context.save();
+
+	      // Draw the clipping disc:
+	      context.beginPath();
+	      context.arc(
+	        node[prefix + 'x'],
+	        node[prefix + 'y'],
+	        node[prefix + 'size'],
+	        0,
+	        Math.PI * 2,
+	        true
+	      );
+	      context.closePath();
+	      context.clip();
+
+	      // Draw the image
+	      context.drawImage(
+	        _cache[url],
+	        node[prefix + 'x'] - size,
+	        node[prefix + 'y'] - size,
+	        2 * size,
+	        2 * size
+	      );
+
+	      // Quit the "clipping mode":
+	      context.restore();
+
+	      var percentageVisited;
+	      
+	      console.log(Game.posStars);
+	      
+	      if (Game.posStars[node.id]){
+	    	  
+		      var star = Game.posStars[node.id];
+		      
+		      percentageVisited = star.visited / Config.getTotalPlayers();	    	  
+	    	  
+	      } else {
+	    	  
+	    	  percentageVisited = 1;
+	    	  
+	      }
+	      
+	      // Draw the border:
+	      context.beginPath();
+	      context.arc(
+	        node[prefix + 'x'],
+	        node[prefix + 'y'],
+	        node[prefix + 'size'],
+	        0,
+	        percentageVisited * (Math.PI * 2),
+	        false
+	      );
+	      context.lineWidth = size / 3;
+	      context.strokeStyle = '#282828';
+	      context.stroke();
+	      
+	      // Draw the border:
+	      context.beginPath();
+	      context.arc(
+	        node[prefix + 'x'],
+	        node[prefix + 'y'],
+	        node[prefix + 'size'] - size / 3,
+	        0,
+	        Math.PI * 2,
+	        false
+	      );
+	      context.lineWidth = size / 3;
+	      context.strokeStyle = node.color || settings('defaultNodeColor');
+	      context.stroke();	      
+	    } else {
+	      sigma.canvas.nodes.image.cache(url);
+	      sigma.canvas.nodes.def.apply(
+	        sigma.canvas.nodes,
+	        args
+	      );
+	    }
+	  };
+
+	  // Let's add a public method to cache images, to make it possible to
+	  // preload images before the initial rendering:
+	  renderer.cache = function(url, callback) {
+	    if (callback)
+	      _callbacks[url] = callback;
+
+	    if (_loading[url])
+	      return;
+
+	    var img = new Image();
+
+	    img.onload = function() {
+	      _loading[url] = false;
+	      _cache[url] = img;
+
+	      if (_callbacks[url]) {
+	        _callbacks[url].call(this, img);
+	        delete _callbacks[url];
+	      }
+	    };
+
+	    _loading[url] = true;
+	    img.src = url;
+	  };
+
+	  return renderer;
+	})();
+	
 	$("#sbut1").click(function() {
 		
 		Game.start();
@@ -21,8 +145,6 @@ $(document).ready(function(){
 	    	
 	    	Graph.init(data);
 	    	
-	    	Game.init();
-	    	
 	    }
 	});
 	
@@ -36,13 +158,15 @@ Game = {
 	
 	position: null,
 	
-	history: [],
+	//history: [],
 	
 	scoresTmpl: null,
 	
 	robotsTmpl: null,
 	
-	posPlayers: null,
+	posPlayers: [],
+	
+	posStars: [],
 	
 	init: function(){
 		
@@ -52,10 +176,18 @@ Game = {
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/init",
 		    data: { min: exportMin, start: Config.startingNodeId, creds: Config.startingCredits, rnds: Config.totRandomBots, rush: Config.totRushBots},
-		    dataType: "html",
+		    dataType: "json",
 		    success: function(data) {
 		    	
 		    	Game.initialized = true;
+		    	
+				$.each(data.stars, function(i,star){
+					
+					Graph.s.graph.nodes(star.name).type = 'image';
+					
+					Graph.s.graph.nodes(star.name).url = Graph.images[star.colorIndex];			
+					
+				});	    	
 		    	
 		    }
 		});
@@ -115,9 +247,7 @@ Game = {
 		
 		$(".robot").hover(Control.overRobot, Control.outRobot);
 		
-		Game.history.push(Game.position);
-		
-		Graph.adjustNodeSizes(Game.position.crowds);
+		//Game.history.push(Game.position);
 		
 		Game.posPlayers = [];
 		
@@ -126,6 +256,16 @@ Game = {
 			Game.posPlayers[val.name] = val;
 			
 		});
+		
+		Game.posStars = [];
+		
+		$.each(Game.position.crowds, function(i,val){
+			
+			Game.posStars[val.starId] = val;
+			
+		});
+		
+		Graph.adjustNodeSizes(Game.position.crowds);		
 		
 	},
 	
@@ -161,7 +301,13 @@ Config = {
 	
 	totRandomBots: 80,
 	
-	totRushBots: 20		
+	totRushBots: 20,
+	
+	getTotalPlayers: function(){
+		
+		return Config.totRandomBots + Config.totRushBots;
+		
+	}
 		
 }
 
@@ -300,41 +446,73 @@ Graph = {
 		
 	s: null,
 	
-	defaultNodeColor: '#ec5148',
+	defaultNodeColor: 'WhiteSmoke',
+	
+	images: [		
+		'img/ng.png',
+		'img/nb.png',
+		'img/no.png',
+		'img/np.png',
+		'img/nr.png'
+	],
 	
 	init: function(data){
+				
+		var loaded = 0;
 		
-		Graph.s = new sigma({ 
-            graph: data,
-            container: 'r2v',
-            settings: {
-                defaultNodeColor: Graph.defaultNodeColor,
-                font: 'Ken',
-                hoverFont: 'Ken',
-                labelHoverBGColor: 'node',
-                edgeColor: 'default'
-            }
-    	});
-    	
-		Graph.s.startForceAtlas2();
-		
-		setTimeout(function(){ 
-			Graph.s.killForceAtlas2();
-		}, 2000);
-		
-		NodeTip.init();
-		
-		Graph.s.bind('overNode', function(e) {
-			
-			NodeTip.over(e);
-			
-		});
-		
-		Graph.s.bind('outNode', function(e) {
-			
-			NodeTip.out();
-			
-		});
+		Graph.images.forEach(function(url) {
+			  sigma.canvas.nodes.image.cache(
+			    url,
+			    function() {
+			      if (++loaded === Graph.images.length){
+			        // Instantiate sigma:
+			  		Graph.s = new sigma({ 
+			            graph: data,
+			            //container: 'r2v',
+			            renderer: {
+			                // IMPORTANT:
+			                // This works only with the canvas renderer, so the
+			                // renderer type set as "canvas" is necessary here.
+			                container: document.getElementById('r2v'),
+			                type: 'canvas'
+			              },            
+			            settings: {
+			                defaultNodeColor: Graph.defaultNodeColor,
+			                font: 'Ken',
+			                hoverFont: 'Ken',
+			                labelHoverBGColor: 'node',
+			                edgeColor: 'default',
+			                minNodeSize: 10,
+			                maxNodeSize: 20             
+			            }
+			    	});
+			  					    	
+					Graph.s.startForceAtlas2();
+					
+					setTimeout(function(){ 
+						Graph.s.killForceAtlas2();
+					}, 2000);
+					
+					NodeTip.init();
+					
+					Graph.s.bind('overNode', function(e) {
+						
+						NodeTip.over(e);
+						
+					});
+					
+					Graph.s.bind('outNode', function(e) {
+						
+						NodeTip.out();
+						
+					});
+					
+			    	Game.init();
+			  		
+			      }
+			    }
+			  );
+			});
 		
 	},
 	

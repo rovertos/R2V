@@ -12,7 +12,9 @@
 		<link rel="stylesheet" type="text/css" href="css/opentip.css">
 		<script src="js/plugins/sigma.plugins.neighborhoods.min.js"></script>	
 		<script src="js/jsrender.min.js"></script>
-		<script src="js/jsviews.min.js"></script>			
+		<script src="js/jsviews.min.js"></script>
+		<script src="js/plugins/shape-library.js"></script>
+		<script src="js/plugins/sigma.renderers.customShapes.min.js"></script>
 	</head>
 	<body>
 		<div id="r2v">
@@ -117,6 +119,10 @@
 				<td>{{:number}}</td>
 			</tr>
 			{{/for}}
+			<tr>
+				<td>Visited</td>
+				<td>{{:visited}}</td>
+			</tr>
 		</tbody>
 	</table>
 	</script>		

@@ -33,6 +33,8 @@ public class FactoryJSON {
 			
 			crowd.setStarId(star.getName());
 			
+			crowd.setVisited(star.getPlayersVisited().size());
+			
 			List<Player> sittingPlayers = star.getSittingPlayers();
 			
 			HashMap<String, PlayerGroupJSON> groupMap = new HashMap<String, PlayerGroupJSON>();
@@ -147,4 +149,31 @@ public class FactoryJSON {
 		
 	}
 	
+	public static InitializationJSON makeInitialization(Board board){
+		
+		InitializationJSON initialization = new InitializationJSON();
+		
+		Iterator<Star> iter = board.getConstellation().vertexSet().iterator();
+		
+		ArrayList<StarJSON> stars = new ArrayList<StarJSON>();
+		
+		while (iter.hasNext()){
+			
+			Star star = iter.next();
+			
+			StarJSON starJSON = new StarJSON();
+			
+			starJSON.setName(star.getName());
+			
+			starJSON.setColorIndex(star.getColor().intValue());
+			
+			stars.add(starJSON);
+			
+		}
+		
+		initialization.setStars(stars);
+		
+		return initialization;
+		
+	}
 }

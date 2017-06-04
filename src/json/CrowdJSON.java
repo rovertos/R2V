@@ -12,6 +12,8 @@ public class CrowdJSON implements Serializable {
 	private List<PlayerGroupJSON> playerGroups;
 	
 	private int total;
+	
+	private int visited;
 
 	public String getStarId() {
 		return starId;
@@ -35,6 +37,14 @@ public class CrowdJSON implements Serializable {
 
 	public void setTotal(int total) {
 		this.total = total;
+	}
+
+	public int getVisited() {
+		return visited;
+	}
+
+	public void setVisited(int visited) {
+		this.visited = visited;
 	}	
 	
 }

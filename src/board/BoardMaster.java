@@ -2,6 +2,11 @@ package board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.jgrapht.alg.ChromaticNumber;
 
 import player.RandomBot;
 import player.Robot;
@@ -66,7 +71,7 @@ public class BoardMaster {
 			
 		}
 		
-		// Finally, iterate to create & add all edges
+		// Iterate to create & add all edges
 		
 		for (int i=0; i<adjacencies.length; i++){
 			
@@ -79,6 +84,30 @@ public class BoardMaster {
 				Star target = board.getStar(nodes[j]);
 				
 				constellation.addEdge(source, target);
+				
+			}
+			
+		}
+		
+		// Perform coloring
+		
+		Map<Integer, Set<Star>> chromaticMap = ChromaticNumber.findGreedyColoredGroups(constellation);				
+		
+		Iterator<Integer> chromaIter = chromaticMap.keySet().iterator();
+		
+		while (chromaIter.hasNext()){
+			
+			Integer color = chromaIter.next();
+			
+			Set<Star> stars = chromaticMap.get(color);
+			
+			Iterator<Star> starIter = stars.iterator();
+			
+			while (starIter.hasNext()){
+				
+				Star star = starIter.next();
+				
+				star.setColor(color);
 				
 			}
 			
@@ -115,7 +144,7 @@ public class BoardMaster {
 			
 			robots.add(rushbot);
 			
-		}		
+		}
 		
 		board.setRobots(robots);
 		
@@ -152,24 +181,20 @@ public class BoardMaster {
 			robot.setCredits(robot.getCredits() + cost);
 			
 			Star destination = selectedDestinations.get(robot.getName());
-			
-			robot.moveToStar(destination);
-			
-			if (!robot.getStarsVisitedThisRound().contains(destination.getName())){
+						
+			if (!robot.getStarsVisitedThisRound().contains(destination)){
 				
 				robot.setScore(robot.getScore() + newStarScore);
 								
 				if (board.getConstellation().vertexSet().size() == robot.getStarsVisitedThisRound().size() + 1){
 					
-					robot.setRoundsCompleted(robot.getRoundsCompleted() + 1);
-					
-					robot.getStarsVisitedThisRound().clear();
+					robot.completeRound();
 					
 				}
-					
-				robot.getStarsVisitedThisRound().add(destination.getName());
 				
 			}
+			
+			robot.moveToStar(destination);			
 			
 		}
 		

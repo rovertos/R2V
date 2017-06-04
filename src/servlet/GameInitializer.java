@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import board.BoardMaster;
+import json.FactoryJSON;
+import json.InitializationJSON;
+import util.JsonUtil;
 
 /**
  * Servlet implementation class GameInitializer
@@ -28,6 +31,8 @@ public class GameInitializer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		String result = null;
 		
 		String exportMin = request.getParameter("min");
 		
@@ -56,6 +61,25 @@ public class GameInitializer extends HttpServlet {
 		boardMaster.layTheBoard(exportMin);
 		
 		boardMaster.sitThePlayers(startingNodeId, startingCredits, totRandomBots, totRushBots);
+		
+		InitializationJSON initialization = FactoryJSON.makeInitialization(boardMaster.getBoard());
+		
+		try {
+			
+			result = JsonUtil.toJSON(initialization);
+			
+			response.setContentType("application/json");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		response.getWriter().write(result);
+		
+		response.getWriter().flush();
+		
+		response.getWriter().close();
 		
 	}
 

@@ -22,7 +22,7 @@ public class Player implements Comparable<Player> {
 	
 	private int roundsCompleted = 0;
 	
-	private List<String> starsVisitedThisRound;
+	private List<Star> starsVisitedThisRound;
 	
 	public Player(String name, Star startingStar, int startingCredits, String type){
 		
@@ -30,15 +30,15 @@ public class Player implements Comparable<Player> {
 		
 		this.type = type;
 		
+		this.starsVisitedThisRound = new ArrayList<Star>();
+		
+		this.movementHistory = new ArrayList<SingleMove>();		
+		
 		this.moveToStar(startingStar);
 		
 		this.setCredits(startingCredits);
 		
 		this.setScore(0);
-		
-		starsVisitedThisRound = new ArrayList<String>();
-		
-		movementHistory = new ArrayList<SingleMove>();
 		
 	}
 	
@@ -54,7 +54,23 @@ public class Player implements Comparable<Player> {
 		
 		position = destination;
 		
+		starsVisitedThisRound.add(destination);
+		
 	}	
+	
+	public void completeRound(){
+		
+		setRoundsCompleted(this.getRoundsCompleted() + 1);
+				
+		for (Star star: starsVisitedThisRound){
+			
+			star.planToRevisit(this);
+			
+		}
+		
+		starsVisitedThisRound.clear();
+		
+	}
 	
 	public String getName() {
 		return name;
@@ -104,7 +120,7 @@ public class Player implements Comparable<Player> {
 		this.roundsCompleted = roundsCompleted;
 	}
 
-	public List<String> getStarsVisitedThisRound() {
+	public List<Star> getStarsVisitedThisRound() {
 		return starsVisitedThisRound;
 	}
 	
