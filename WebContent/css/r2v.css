@@ -157,73 +157,15 @@
 
 }
 
-#bonus {
+#interface {
 	
-    float: left;
+    width: 300px;
     
-    z-index: 1;
-	
-}
-
-.bonus {
-	
-    width: 50px;
+    z-index: 100;
     
-    height: 50px;
+    margin-top: 20px;    
     
-    background-image: url('../img/metalPanelS.png');
-    
-    margin-left: 30px;
-    
-    margin-top: 10px;
-	
-}
-
-.bonus.red {
-	
-    background-image: url('../img/red_panelS.png');	
-	
-}
-
-.bonus.green {
-	
-    background-image: url('../img/green_panelS.png');	
-	
-}
-
-.bonus.yellow {
-	
-    background-image: url('../img/yellow_panelS.png');	
-	
-}
-
-.bonus.blue {
-	
-    background-image: url('../img/blue_panelS.png');	
-	
-}
-
-.bonus._red {
-	
-    background-image: url('../img/metalPanel_redCornerS.png');	
-	
-}
-
-.bonus._green {
-	
-    background-image: url('../img/metalPanel_greenCornerS.png');	
-	
-}
-
-.bonus._yellow {
-	
-    background-image: url('../img/metalPanel_yellowCornerS.png');	
-	
-}
-
-.bonus._blue {
-	
-    background-image: url('../img/metalPanel_blueCornerS.png');	
+    margin-left: 20px;
 	
 }
 

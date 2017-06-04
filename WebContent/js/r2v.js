@@ -1,6 +1,8 @@
 
 $(document).ready(function(){
 	
+	Interface.init();
+	
 	sigma.utils.pkg('sigma.canvas.nodes');
 	
 	sigma.canvas.nodes.image = (function() {
@@ -46,8 +48,6 @@ $(document).ready(function(){
 	      context.restore();
 
 	      var percentageVisited;
-	      
-	      console.log(Game.posStars);
 	      
 	      if (Game.posStars[node.id]){
 	    	  
@@ -129,6 +129,18 @@ $(document).ready(function(){
 		
 		Game.start();
 		
+	});
+	
+	$("#sbut4").click(function() {
+		
+		Graph.s.startForceAtlas2({worker: true, barnesHutOptimize: false});
+				
+	});
+	
+	$("#sbut5").click(function() {
+		
+		Graph.s.killForceAtlas2();
+		
 	});	
 	
 	$("#sbut6").click(function() {
@@ -137,16 +149,7 @@ $(document).ready(function(){
 		
 	});
 	
-	$.ajax({
-	    type: "GET",  
-	    url: "http://localhost:8080/R2V/graph1.html",
-	    dataType: "json",
-	    success: function(data) {
-	    	
-	    	Graph.init(data);
-	    	
-	    }
-	});
+	Graph.init();
 	
 });
 
@@ -302,6 +305,8 @@ Config = {
 	totRandomBots: 80,
 	
 	totRushBots: 20,
+	
+	graphType: 1,
 	
 	getTotalPlayers: function(){
 		

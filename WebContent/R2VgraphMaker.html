@@ -1,55 +1,25 @@
-<script src="lib/jquery-2.1.1.min.js"></script>
 <!-- START SIGMA IMPORTS -->
-<script src="../src/sigma.core.js"></script>
-<script src="../src/conrad.js"></script>
-<script src="../src/utils/sigma.utils.js"></script>
-<script src="../src/utils/sigma.polyfills.js"></script>
-<script src="../src/sigma.settings.js"></script>
-<script src="../src/classes/sigma.classes.dispatcher.js"></script>
-<script src="../src/classes/sigma.classes.configurable.js"></script>
-<script src="../src/classes/sigma.classes.graph.js"></script>
-<script src="../src/classes/sigma.classes.camera.js"></script>
-<script src="../src/classes/sigma.classes.quad.js"></script>
-<script src="../src/classes/sigma.classes.edgequad.js"></script>
-<script src="../src/captors/sigma.captors.mouse.js"></script>
-<script src="../src/captors/sigma.captors.touch.js"></script>
-<script src="../src/renderers/sigma.renderers.canvas.js"></script>
-<script src="../src/renderers/sigma.renderers.webgl.js"></script>
-<script src="../src/renderers/sigma.renderers.svg.js"></script>
-<script src="../src/renderers/sigma.renderers.def.js"></script>
-<script src="../src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
-<script src="../src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
-<script src="../src/renderers/webgl/sigma.webgl.edges.def.js"></script>
-<script src="../src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
-<script src="../src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.labels.def.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edges.def.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
-<script src="../src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
-<script src="../src/renderers/svg/sigma.svg.utils.js"></script>
-<script src="../src/renderers/svg/sigma.svg.nodes.def.js"></script>
-<script src="../src/renderers/svg/sigma.svg.edges.def.js"></script>
-<script src="../src/renderers/svg/sigma.svg.edges.curve.js"></script>
-<script src="../src/renderers/svg/sigma.svg.labels.def.js"></script>
-<script src="../src/renderers/svg/sigma.svg.hovers.def.js"></script>
-<script src="../src/middlewares/sigma.middlewares.rescale.js"></script>
-<script src="../src/middlewares/sigma.middlewares.copy.js"></script>
-<script src="../src/misc/sigma.misc.animation.js"></script>
-<script src="../src/misc/sigma.misc.bindEvents.js"></script>
-<script src="../src/misc/sigma.misc.bindDOMEvents.js"></script>
-<script src="../src/misc/sigma.misc.drawHovers.js"></script>
-<!-- END SIGMA IMPORTS -->
-<script src="../plugins/sigma.plugins.neighborhoods/sigma.plugins.neighborhoods.js"></script>
-<script src="../plugins/sigma.renderers.snapshot/sigma.renderers.snapshot.js"></script>
-<script src="../plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="js/sigma.min.js"></script>
+		<script src="js/plugins/sigma.parsers.json.min.js"></script>
+		<script src="js/plugins/sigma.layout.forceAtlas2.min.js"></script>
+		<script src="js/opentip-jquery.min.js"></script>		
+
+		<script src="js/interface.js"></script>		
+		<link rel="stylesheet" type="text/css" href="css/r2v.css">
+		<script src="js/adapter-jquery.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/opentip.css">
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css">
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css">			
+		<script src="js/plugins/sigma.plugins.neighborhoods.min.js"></script>	
+		<script src="js/jsrender.min.js"></script>
+		<script src="js/jsviews.min.js"></script>
+		<script src="js/plugins/shape-library.js"></script>
+		<script src="js/plugins/sigma.renderers.customShapes.min.js"></script>
+		<script src="js/jquery-ui.min.js"></script>		
+
+		<script src="js/plugins/sigma.plugins.dragNodes.min.js"></script>
+		
 <div id="container">
   <style>
   	.gmbut {
@@ -73,8 +43,6 @@
   <div id="menu"><input type="button" class="gmbut" id="export" value="Export Full"/><input type="button" class="gmbut" id="export2" value="Export Min"/></div>
   <div id="graph-container"></div>
 </div>
-<script src="../plugins/sigma.layout.forceAtlas2/worker.js"></script>
-<script src="../plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
 <script>
 /**
  * This is a basic example on how to instantiate sigma. A random graph is
@@ -95,7 +63,7 @@ Graph = {
 	
 	s: null,
 	
-	renderer: null,
+	//renderer: null,
 	
 	connections: [],
 	
@@ -108,7 +76,7 @@ Graph = {
 	init: function() {
 		
 		var i,
-				r = 1,
+			r = 1,
 		    s,
 		    N = 12,
 		    edge = 0;
@@ -161,7 +129,7 @@ Graph = {
 		
 		Graph.s.refresh();*/
 		
-		setTimeout(function() {console.log(Graph.s.renderers[0].snapshot({format: 'png', background: 'white', filename: 'my-graph.png', labels: false}));}, 1000);
+		//setTimeout(function() {console.log(Graph.s.renderers[0].snapshot({format: 'png', background: 'white', filename: 'my-graph.png', labels: false}));}, 1000);
 		Graph.s.startForceAtlas2({worker: true, barnesHutOptimize: false});
 		//Graph.s.startForceAtlas2();
 		setTimeout(function(){ Graph.s.stopForceAtlas2(); }, 3000);
