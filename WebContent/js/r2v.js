@@ -53,7 +53,7 @@ $(document).ready(function(){
 	    	  
 		      var star = Game.posStars[node.id];
 		      
-		      percentageVisited = star.visited / Config.getTotalPlayers();	    	  
+		      percentageVisited = star.visited / Game.position.players.length;
 	    	  
 	      } else {
 	    	  
@@ -127,9 +127,21 @@ $(document).ready(function(){
 	
 	$("#sbut1").click(function() {
 		
-		Game.start();
+		Game.move();
 		
 	});
+	
+	$("#sbut2").click(function() {
+		
+		Game.startAuto();
+		
+	});
+	
+	$("#sbut3").click(function() {
+		
+		Game.stopAuto();
+		
+	});		
 	
 	$("#sbut4").click(function() {
 		
@@ -145,11 +157,9 @@ $(document).ready(function(){
 	
 	$("#sbut6").click(function() {
 		
-		Game.stop();
+		Game.stopAuto();
 		
 	});
-	
-	Graph.init();
 	
 });
 
@@ -160,8 +170,6 @@ Game = {
 	initialized: false,
 	
 	position: null,
-	
-	//history: [],
 	
 	scoresTmpl: null,
 	
@@ -175,10 +183,18 @@ Game = {
 		
 		var exportMin = Graph.exportMin();
 		
+		var startingNodeId = $("#StartingNode").val();
+		
+		var startingCredits = $("#StartingCredits").val();
+		
+		var totRandomBots = $("#RandomBots").val();
+		
+		var totRushBots = $("#RushBots").val();
+		
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/init",
-		    data: { min: exportMin, start: Config.startingNodeId, creds: Config.startingCredits, rnds: Config.totRandomBots, rush: Config.totRushBots},
+		    data: { min: exportMin, start: startingNodeId, creds: startingCredits, rnds: totRandomBots, rush: totRushBots},
 		    dataType: "json",
 		    success: function(data) {
 		    	
@@ -188,9 +204,11 @@ Game = {
 					
 					Graph.s.graph.nodes(star.name).type = 'image';
 					
-					Graph.s.graph.nodes(star.name).url = Graph.images[star.colorIndex];			
+					Graph.s.graph.nodes(star.name).url = Graph.images[star.colorIndex];
 					
-				});	    	
+				});
+				
+				Game.move();
 		    	
 		    }
 		});
@@ -198,10 +216,17 @@ Game = {
 	},
 	
 	move: function(){
+		
+		var costMultiplier = $("#CostMultiplier").val();
+		
+		var stayingBonus = $("#StayingBonus").val();
+		
+		var newStarScore = $("#NewStarScore").val();
+		
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/ctrl",
-		    data: { cmult: Config.costMultiplier, stbon: Config.stayingBonus, newsc: Config.newStarScore },
+		    data: { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore },
 		    dataType: "json",
 		    success: function(data) {
 		    	
@@ -250,8 +275,6 @@ Game = {
 		
 		$(".robot").hover(Control.overRobot, Control.outRobot);
 		
-		//Game.history.push(Game.position);
-		
 		Game.posPlayers = [];
 		
 		$.each(Game.position.players, function(i,val){
@@ -272,7 +295,7 @@ Game = {
 		
 	},
 	
-	start: function(){
+	startAuto: function(){
 		
 		if (Game.initialized)
 		
@@ -280,37 +303,11 @@ Game = {
 		
 	},
 	
-	stop: function(){
+	stopAuto: function(){
 		
 		if (Game.initialized)
 		
 			window.clearInterval(Game.interval);
-		
-	}
-		
-}
-
-Config = {
-		
-	costMultiplier: 1,
-	
-	stayingBonus: 10,
-	
-	newStarScore: 20,
-	
-	startingNodeId: "n3",
-	
-	startingCredits: 1000,
-	
-	totRandomBots: 80,
-	
-	totRushBots: 20,
-	
-	graphType: 1,
-	
-	getTotalPlayers: function(){
-		
-		return Config.totRandomBots + Config.totRushBots;
 		
 	}
 		
@@ -446,121 +443,3 @@ NodeTip = {
 	}	
 
 }
-
-Graph = {
-		
-	s: null,
-	
-	defaultNodeColor: 'WhiteSmoke',
-	
-	images: [		
-		'img/ng.png',
-		'img/nb.png',
-		'img/no.png',
-		'img/np.png',
-		'img/nr.png'
-	],
-	
-	init: function(data){
-				
-		var loaded = 0;
-		
-		Graph.images.forEach(function(url) {
-			  sigma.canvas.nodes.image.cache(
-			    url,
-			    function() {
-			      if (++loaded === Graph.images.length){
-			        // Instantiate sigma:
-			  		Graph.s = new sigma({ 
-			            graph: data,
-			            //container: 'r2v',
-			            renderer: {
-			                // IMPORTANT:
-			                // This works only with the canvas renderer, so the
-			                // renderer type set as "canvas" is necessary here.
-			                container: document.getElementById('r2v'),
-			                type: 'canvas'
-			              },            
-			            settings: {
-			                defaultNodeColor: Graph.defaultNodeColor,
-			                font: 'Ken',
-			                hoverFont: 'Ken',
-			                labelHoverBGColor: 'node',
-			                edgeColor: 'default',
-			                minNodeSize: 10,
-			                maxNodeSize: 20             
-			            }
-			    	});
-			  					    	
-					Graph.s.startForceAtlas2();
-					
-					setTimeout(function(){ 
-						Graph.s.killForceAtlas2();
-					}, 2000);
-					
-					NodeTip.init();
-					
-					Graph.s.bind('overNode', function(e) {
-						
-						NodeTip.over(e);
-						
-					});
-					
-					Graph.s.bind('outNode', function(e) {
-						
-						NodeTip.out();
-						
-					});
-					
-			    	Game.init();
-			  		
-			      }
-			    }
-			  );
-			});
-		
-	},
-	
-	freeze: function(){
-		
-		Graph.s.stopForceAtlas2();
-		
-	},
-	
-	exportMin: function(){
-		
-		var exportMin = "";
-		$.each(Graph.s.graph.nodes(),function(index,node){
-			var neighbors = Graph.s.graph.neighborhood(node.id);
-			for (var i=0; i<neighbors.nodes.length; i++){
-				exportMin += neighbors.nodes[i].id;
-				if (i+1<neighbors.nodes.length)
-					exportMin += ",";
-			}
-			exportMin += "-";
-		});
-		exportMin = exportMin.substring(0,exportMin.length-1);
-		return exportMin;
-		
-	},
-	
-	scaleNode: function(nodeId, crowdSize, intensity){
-		
-		Graph.s.graph.nodes(nodeId).size = 10 + crowdSize * intensity;
-		
-	},
-	
-	adjustNodeSizes: function(crowds){
-		
-		$.each(crowds, function(i,val){
-			
-			Graph.scaleNode(val.starId, val.total, 1);
-			
-		});
-		
-		Graph.s.refresh({ skipIndexation: true });
-		
-	}
-
-}
-

@@ -52,8 +52,8 @@ public class GameController extends HttpServlet {
 			System.out.println("stayingBonus="+stayingBonus);
 			
 			System.out.println("newStarScore="+newStarScore);	
-							
-			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore);
+			
+			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore);			
 			
 			PositionJSON position = FactoryJSON.makePosition(boardMaster.getBoard());
 			

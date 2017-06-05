@@ -2,6 +2,14 @@
 
 @font-face {font-family: Ken; src: url(../fonts/kenvector_future_thin.ttf); }
 
+body {
+	
+	background-image: url('../img/stardust.png');
+	
+    font-family: Ken;	
+	
+}
+
 #r2v {
 		
 	width: 100%;
@@ -16,8 +24,6 @@
 	z-index: 0;
 	
     margin: auto;
-    
-    font-family: Ken;
 	
 }
 
@@ -290,12 +296,6 @@
 .spacer {
 	
 	height: 10px;
-	
-}
-
-body {
-	
-	background-image: url('../img/stardust.png');
 	
 }
 

@@ -22,7 +22,21 @@ Graph = {
 		'img/nr.png'
 	],
 	
-	init: function(){
+	init: function(graphType){
+		
+		if (Graph.s){
+		
+			Graph.s.graph.clear();
+			
+			$("#r2v").empty();
+			
+			Graph.g = { nodes: [], edges: [] };
+			
+			Graph.connections= [];
+			
+			Graph.consArray = [];
+		
+		}
 		
 		var loaded = 0;
 		
@@ -33,7 +47,7 @@ Graph = {
 			      if (++loaded === Graph.images.length){
 			        // Instantiate sigma:
 			    	
-			    	if (Config.graphType == 0){
+			    	if (graphType == 0){
 			    		
 			    		$.ajax({
 			    		    type: "GET",  
@@ -57,7 +71,7 @@ Graph = {
 					
 					setTimeout(function(){
 						Graph.s.killForceAtlas2();
-					}, 2000);
+					}, 1000);
 					
 					Graph.dragListener = sigma.plugins.dragNodes(Graph.s, Graph.s.renderers[0]);
 					
@@ -87,8 +101,8 @@ Graph = {
 						NodeTip.out();
 						
 					});
-					
-			    	Game.init();
+										
+					Interface.enableStartGame();
 			  		
 			      }
 			    }
@@ -127,7 +141,7 @@ Graph = {
 		var i,
 			r = 1,
 		    s,
-		    N = 12,
+		    N = $("#NumberOfStars").val(),
 		    edge = 0;
 		
 		// Generate a random graph:

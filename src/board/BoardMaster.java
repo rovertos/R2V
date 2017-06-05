@@ -152,51 +152,55 @@ public class BoardMaster {
 	
 	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore){
 		
-		board.TURN++;
+		if (board.TURN > 0){
 		
-		CrowdMovement crowdMovement = new CrowdMovement(costMultiplier, stayingBonus);		
-		
-		HashMap<String,Star> selectedDestinations = new HashMap<String,Star>();
-		
-		// Order the bots to pick their destinations
-		
-		for (Robot robot: board.getRobots()){
+			CrowdMovement crowdMovement = new CrowdMovement(costMultiplier, stayingBonus);		
 			
-			Star destination = robot.pickNewDestination(board);
+			HashMap<String,Star> selectedDestinations = new HashMap<String,Star>();
 			
-			crowdMovement.registerSingleMove(robot, destination);
+			// Order the bots to pick their destinations
 			
-			selectedDestinations.put(robot.getName(), destination);
-			
-		}
-		
-		// Apply movement costs & award score bonuses
-		
-		crowdMovement.calculateCosts();
-		
-		for (Robot robot: board.getRobots()){
-			
-			int cost = crowdMovement.getCostForPlayer(robot);
-			
-			robot.setCredits(robot.getCredits() + cost);
-			
-			Star destination = selectedDestinations.get(robot.getName());
-						
-			if (!robot.getStarsVisitedThisRound().contains(destination)){
+			for (Robot robot: board.getRobots()){
 				
-				robot.setScore(robot.getScore() + newStarScore);
-								
-				if (board.getConstellation().vertexSet().size() == robot.getStarsVisitedThisRound().size() + 1){
-					
-					robot.completeRound();
-					
-				}
+				Star destination = robot.pickNewDestination(board);
+				
+				crowdMovement.registerSingleMove(robot, destination);
+				
+				selectedDestinations.put(robot.getName(), destination);
 				
 			}
 			
-			robot.moveToStar(destination);			
+			// Apply movement costs & award score bonuses
 			
+			crowdMovement.calculateCosts();
+			
+			for (Robot robot: board.getRobots()){
+				
+				int cost = crowdMovement.getCostForPlayer(robot);
+				
+				robot.setCredits(robot.getCredits() + cost);
+				
+				Star destination = selectedDestinations.get(robot.getName());
+							
+				if (!robot.getStarsVisitedThisRound().contains(destination)){
+					
+					robot.setScore(robot.getScore() + newStarScore);
+									
+					if (board.getConstellation().vertexSet().size() == robot.getStarsVisitedThisRound().size() + 1){
+						
+						robot.completeRound();
+						
+					}
+					
+				}
+				
+				robot.moveToStar(destination);			
+				
+			}
+		
 		}
+		
+		board.TURN++;
 		
 	}
 	

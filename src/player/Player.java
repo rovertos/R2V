@@ -44,7 +44,7 @@ public class Player implements Comparable<Player> {
 	
 	public void moveToStar(Star destination){
 		
-		if (position!=null && !position.getName().equals(destination.getName())){
+		if (position!=null && !position.equals(destination)){
 						
 			position.removePlayer(this);
 		
