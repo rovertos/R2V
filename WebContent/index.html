@@ -27,10 +27,10 @@
 			<div id="panel">
 				<div id="top-panel">
 					<div id="timer">
-						<div id="timerInner">88</div>
+						<div id="playerRank"></div>
 					</div>
 					<div id="score">
-						<div id="scoreInner">8888</div>
+						<div id="playerScore"></div>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -157,7 +157,11 @@
 			<td data-th="Initial">{^{:initial}}</td>
 		</tr>
 	{{/for}}
-	</script>	
+	</script>
+	
+	<script id="playerRankT" type="text/x-jsrender">{^{for starHopper}}{^{:rank}}{{/for}}</script>
+	
+	<script id="playerScoreT" type="text/x-jsrender">{^{for starHopper}}{^{:credits}} - {^{:score}}{{/for}}</script>
 	
 	<script id="nodeTipT" type="text/x-jsrender">
 	<table class="tipTable">

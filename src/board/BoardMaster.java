@@ -11,6 +11,7 @@ import org.jgrapht.alg.ChromaticNumber;
 import player.RandomBot;
 import player.Robot;
 import player.RushBot;
+import player.StarHopper;
 import transition.CrowdMovement;
 
 public class BoardMaster {
@@ -122,7 +123,9 @@ public class BoardMaster {
 		
 		Star startingStar = this.board.getStar(startingNodeId);
 		
-		this.board.setStartingStar(startingStar);
+		board.setStartingStar(startingStar);
+		
+		board.starHopper = new StarHopper("YOU", startingStar, startingCredits);
 		
 		ArrayList<Robot> robots = new ArrayList<Robot>();
 		
@@ -150,13 +153,19 @@ public class BoardMaster {
 		
 	}
 	
-	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore){
+	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore, String starHopperMove, int starHopperBid){
 		
 		if (board.TURN > 0){
-		
+			
 			CrowdMovement crowdMovement = new CrowdMovement(costMultiplier, stayingBonus);		
 			
-			HashMap<String,Star> selectedDestinations = new HashMap<String,Star>();
+			HashMap<String,Star> selectedDestinations = new HashMap<String,Star>();			
+			
+			// Handle Starhopper move
+			
+			Star starHopperNewPosition = board.getStar(starHopperMove);
+			
+			crowdMovement.registerSingleMove(board.starHopper, starHopperNewPosition);
 			
 			// Order the bots to pick their destinations
 			
@@ -170,7 +179,7 @@ public class BoardMaster {
 				
 			}
 			
-			// Apply movement costs & award score bonuses
+			// Apply movement costs for Robots & award score bonuses
 			
 			crowdMovement.calculateCosts();
 			
@@ -185,7 +194,7 @@ public class BoardMaster {
 				if (!robot.getStarsVisitedThisRound().contains(destination)){
 					
 					robot.setScore(robot.getScore() + newStarScore);
-									
+					
 					if (board.getConstellation().vertexSet().size() == robot.getStarsVisitedThisRound().size() + 1){
 						
 						robot.completeRound();
@@ -194,9 +203,29 @@ public class BoardMaster {
 					
 				}
 				
-				robot.moveToStar(destination);			
+				robot.moveToStar(destination);
 				
 			}
+			
+			// Apply movement costs for StarHopper & award score bonus
+			
+			int cost = crowdMovement.getCostForPlayer(board.starHopper);
+			
+			board.starHopper.setCredits(board.starHopper.getCredits() + cost);
+			
+			if (!board.starHopper.getStarsVisitedThisRound().contains(starHopperNewPosition)){
+				
+				board.starHopper.setScore(board.starHopper.getScore() + newStarScore);
+				
+				if (board.getConstellation().vertexSet().size() == board.starHopper.getStarsVisitedThisRound().size() + 1){
+					
+					board.starHopper.completeRound();
+					
+				}
+				
+			}
+			
+			board.starHopper.moveToStar(starHopperNewPosition);
 		
 		}
 		

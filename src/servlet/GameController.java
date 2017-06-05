@@ -45,15 +45,23 @@ public class GameController extends HttpServlet {
 			
 			int newStarScore = Integer.parseInt(request.getParameter("newsc"));
 			
+			String starHopperMove = request.getParameter("shmov") != null ? request.getParameter("shmov") : boardMaster.getBoard().getStartingStar().getName();
+			
+			int starHopperBid = request.getParameter("shbid") != null ? Integer.parseInt(request.getParameter("shbid")) : 0;
+			
 			System.out.println("---------- MOVE " + boardMaster.getBoard().TURN + " ----------");
 			
 			System.out.println("costMultiplier="+costMultiplier);
 			
 			System.out.println("stayingBonus="+stayingBonus);
 			
-			System.out.println("newStarScore="+newStarScore);	
+			System.out.println("newStarScore="+newStarScore);
 			
-			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore);			
+			System.out.println("starHopperMove="+starHopperMove);
+			
+			System.out.println("starHopperBid="+starHopperBid);
+			
+			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore, starHopperMove, starHopperBid);			
 			
 			PositionJSON position = FactoryJSON.makePosition(boardMaster.getBoard());
 			

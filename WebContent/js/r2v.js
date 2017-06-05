@@ -87,7 +87,24 @@ $(document).ready(function(){
 	      );
 	      context.lineWidth = size / 3;
 	      context.strokeStyle = node.color || settings('defaultNodeColor');
-	      context.stroke();	      
+	      context.stroke();
+	      
+	      // Player position
+	      if (Game.posPlayers["you"] && node.id == Game.posPlayers["you"].location){
+	    	  
+		      context.beginPath();
+		      context.arc(
+		        node[prefix + 'x'],
+		        node[prefix + 'y'],
+		        node[prefix + 'size'] + size,
+		        0,
+		        Math.PI * 2,
+		        false
+		      );
+		      context.lineWidth = 1;
+		      context.strokeStyle = "white";
+		      context.stroke();	    	  
+	      }
 	    } else {
 	      sigma.canvas.nodes.image.cache(url);
 	      sigma.canvas.nodes.def.apply(
@@ -175,6 +192,10 @@ Game = {
 	
 	robotsTmpl: null,
 	
+	playerRankTmpl: null,
+	
+	playerScoreTmpl: null,
+	
 	posPlayers: [],
 	
 	posStars: [],
@@ -217,16 +238,32 @@ Game = {
 	
 	move: function(){
 		
+		Game.starHopperMove(null,null);
+		
+	},
+	
+	starHopperMove: function(starhopperMove, starhopperBid){
+		
 		var costMultiplier = $("#CostMultiplier").val();
 		
 		var stayingBonus = $("#StayingBonus").val();
 		
 		var newStarScore = $("#NewStarScore").val();
 		
+		var args;
+		
+		if (starhopperMove != null)
+			
+			args = { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore, shmov: starhopperMove, shbid: starhopperBid}
+		
+		else
+			
+			args = { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore };
+		
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/ctrl",
-		    data: { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore },
+		    data: args,
 		    dataType: "json",
 		    success: function(data) {
 		    	
@@ -253,6 +290,8 @@ Game = {
 			
 			$.observable(Game.position).setProperty("robots",data.robots);
 			
+			$.observable(Game.position).setProperty("starHopper",data.starHopper);
+			
 		}
 		
 		if (Game.scoresTmpl == null){
@@ -267,7 +306,23 @@ Game = {
 			
 			Game.robotsTmpl = $.templates("#robotsT");
 			
-			Game.robotsTmpl.link("#robotsBody",Game.position);	
+			Game.robotsTmpl.link("#robotsBody",Game.position);
+			
+		}
+		
+		if (Game.playerRankTmpl == null){
+			
+			Game.playerRankTmpl = $.templates("#playerRankT");
+			
+			Game.playerRankTmpl.link("#playerRank",Game.position);
+			
+		}
+		
+		if (Game.playerScoreTmpl == null){
+			
+			Game.playerScoreTmpl = $.templates("#playerScoreT");
+			
+			Game.playerScoreTmpl.link("#playerScore",Game.position);
 			
 		}
 		
@@ -282,6 +337,8 @@ Game = {
 			Game.posPlayers[val.name] = val;
 			
 		});
+		
+		Game.posPlayers["you"] = data.starHopper;
 		
 		Game.posStars = [];
 		
@@ -391,6 +448,8 @@ NodeTip = {
 		
 	tip: null,
 	
+	dragging: false,
+	
 	init: function() {
 		
 		Opentip.styles.myErrorStyle = {
@@ -440,6 +499,32 @@ NodeTip = {
 		
 		NodeTip.tip.hide();
 		
-	}	
+	},
+	
+	click: function(e){
+		
+		if (!NodeTip.dragging){
+		
+			console.log(e.data.node.id);
+			
+			var neighbors = Graph.s.graph.neighborhood(Game.posPlayers["you"].location);
+			
+			for (var i=0; i<neighbors.nodes.length; i++){
+				
+				if (e.data.node.id == neighbors.nodes[i].id){
+				
+					Game.starHopperMove(e.data.node.id, 0);
+					
+					break;
+					
+				}
+				
+			}			
+			
+		}
+		
+		NodeTip.dragging = false;
+		
+	}
 
 }

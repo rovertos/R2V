@@ -45,16 +45,22 @@ public class Player implements Comparable<Player> {
 	public void moveToStar(Star destination){
 		
 		if (position!=null && !position.equals(destination)){
-						
-			position.removePlayer(this);
+			
+			position.removePlayer(this);		
 		
+		}		
+		
+		if (position == null || !position.equals(destination)){
+
+			destination.addPlayer(this);
+			
+			position = destination;
+			
 		}
 		
-		destination.addPlayer(this);
-		
-		position = destination;
-		
-		starsVisitedThisRound.add(destination);
+		if (!starsVisitedThisRound.contains(destination))
+			
+			starsVisitedThisRound.add(destination);
 		
 	}	
 	

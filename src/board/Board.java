@@ -1,8 +1,10 @@
 package board;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import player.Player;
 import player.Robot;
 import player.StarHopper;
 
@@ -12,7 +14,7 @@ public class Board {
 	
 	private List<Robot> robots;
 	
-	private StarHopper starHopper;
+	public StarHopper starHopper;
 	
 	private HashMap<String,Star> starMap = new HashMap<String,Star>();
 	
@@ -53,17 +55,21 @@ public class Board {
 	public List<Robot> getRobots() {
 		return robots;
 	}
+	
+	public List<Player> getPlayers(){
+		
+		ArrayList<Player> players = new ArrayList<Player>();
+		
+		players.addAll(robots);
+		
+		players.add(starHopper);
+		
+		return players;
+		
+	}
 
 	public void setRobots(List<Robot> robots) {
 		this.robots = robots;
-	}
-
-	public StarHopper getStarHopper() {
-		return starHopper;
-	}
-
-	public void setStarHopper(StarHopper starHopper) {
-		this.starHopper = starHopper;
 	}
 	
 }

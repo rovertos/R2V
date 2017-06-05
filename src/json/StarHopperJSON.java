@@ -10,6 +10,8 @@ public class StarHopperJSON implements Serializable {
 	
 	private int rank;
 	
+	private int score;	
+	
 	private String location;
 
 	public int getCredits() {
@@ -34,6 +36,14 @@ public class StarHopperJSON implements Serializable {
 
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
 	}	
 
 }

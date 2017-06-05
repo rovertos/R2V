@@ -87,15 +87,17 @@ public class FactoryJSON {
 		
 		position.setCrowds(crowds);
 		
-		Collections.sort(board.getRobots());
+		List<Player> playerList = board.getPlayers();
+		
+		Collections.sort(playerList);
+		
+		int playerRank = playerList.indexOf(board.starHopper) + 1;
 		
 		ArrayList<RankedPlayerJSON> rankedPlayers = new ArrayList<RankedPlayerJSON>();
 		
 		int numberOfStars = board.getConstellation().vertexSet().size();
 		
-		// TODO: Rank humans with robots too
-		
-		for (Player player: board.getRobots()){
+		for (Player player: playerList){
 			
 			RankedPlayerJSON rankedPlayer = new RankedPlayerJSON();
 			
@@ -144,6 +146,18 @@ public class FactoryJSON {
 		}
 			
 		position.setRobots(robots);
+		
+		StarHopperJSON starHopperJSON = new StarHopperJSON();
+		
+		starHopperJSON.setRank(playerRank);
+		
+		starHopperJSON.setCredits(board.starHopper.getCredits());
+		
+		starHopperJSON.setLocation(board.starHopper.getPosition().getName());
+		
+		starHopperJSON.setScore(board.starHopper.getScore());
+		
+		position.setStarHopper(starHopperJSON);
 		
 		return position;
 		

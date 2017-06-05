@@ -79,13 +79,13 @@ Graph = {
 					  Graph.s.killForceAtlas2();
 					});
 					Graph.dragListener.bind('drag', function(event) {
-					  console.log(event);
+						NodeTip.dragging = true;
 					});
 					Graph.dragListener.bind('drop', function(event) {
-					  console.log(event);
+						//console.log("drop");
 					});
 					Graph.dragListener.bind('dragend', function(event) {
-					  console.log(event);
+					  //console.log(event);
 					});					
 					
 					NodeTip.init();
@@ -101,6 +101,12 @@ Graph = {
 						NodeTip.out();
 						
 					});
+					
+					Graph.s.bind('clickNode', function(e) {
+						
+						NodeTip.click(e);
+						
+					});					
 										
 					Interface.enableStartGame();
 			  		
@@ -128,7 +134,8 @@ Graph = {
 	            labelHoverBGColor: 'node',
 	            edgeColor: 'default',
 	            minNodeSize: 10,
-	            maxNodeSize: 20             
+	            maxNodeSize: 20,
+	            doubleClickEnabled: false
 	        }
 		});
 		
@@ -189,7 +196,8 @@ Graph = {
 	            labelHoverBGColor: 'node',
 	            edgeColor: 'default',
 	            minNodeSize: 10,
-	            maxNodeSize: 20   
+	            maxNodeSize: 20,
+	            doubleClickEnabled: false   
 	        }
 		});		
 		
