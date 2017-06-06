@@ -1,6 +1,7 @@
 package json;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class StarHopperJSON implements Serializable {
 
@@ -13,6 +14,8 @@ public class StarHopperJSON implements Serializable {
 	private int score;	
 	
 	private String location;
+	
+	private List<String> visited;
 
 	public int getCredits() {
 		return credits;
@@ -44,6 +47,14 @@ public class StarHopperJSON implements Serializable {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public List<String> getVisited() {
+		return visited;
+	}
+
+	public void setVisited(List<String> visited) {
+		this.visited = visited;
 	}	
 
 }

@@ -157,6 +157,18 @@ public class FactoryJSON {
 		
 		starHopperJSON.setScore(board.starHopper.getScore());
 		
+		ArrayList<String> visited = new ArrayList<String>();
+		
+		for (Star star: board.starHopper.getStarsVisitedThisRound()){
+			
+			if (!star.getName().equals(board.starHopper.getPosition().getName()))
+				
+				visited.add(star.getName());
+			
+		}
+		
+		starHopperJSON.setVisited(visited);
+		
 		position.setStarHopper(starHopperJSON);
 		
 		return position;

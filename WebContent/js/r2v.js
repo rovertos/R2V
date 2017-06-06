@@ -105,6 +105,26 @@ $(document).ready(function(){
 		      context.strokeStyle = "white";
 		      context.stroke();	    	  
 	      }
+	      
+	      console.log(Game.posPlayers["you"].visited);
+	      
+	      if (Game.posPlayers["you"].visited.indexOf(node.id) > -1){
+	    	  
+		      context.beginPath();
+		      context.arc(
+		        node[prefix + 'x'],
+		        node[prefix + 'y'],
+		        node[prefix + 'size'] + size*3/5,
+		        0,
+		        Math.PI * 2,
+		        false
+		      );
+		      context.lineWidth = 1;
+		      context.strokeStyle = "grey";
+		      context.stroke();		    	  
+	    	  
+	      }
+	      
 	    } else {
 	      sigma.canvas.nodes.image.cache(url);
 	      sigma.canvas.nodes.def.apply(
