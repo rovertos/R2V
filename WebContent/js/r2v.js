@@ -199,7 +199,7 @@ $(document).ready(function(){
 		
 		Game.stopAuto();
 		
-	});
+	});	
 	
 });
 
@@ -419,11 +419,15 @@ Game = {
 		
 		if (winner === "YOU"){
 			
-			alert("YOU WIN!");
+			NodeTip.victory.show();
 			
 		} else {
 			
-			alert("You lose... Robot " + winner + " is the winner.");
+			$("#Winner").text(winner);
+			
+			NodeTip.defeat = new Opentip("#GameOver", $("#Defeat").html(), "Game Over", { style: "defeatStyle" });	
+			
+			NodeTip.defeat.show();
 			
 		}		
 		
@@ -509,6 +513,10 @@ NodeTip = {
 		
 	tip: null,
 	
+	victory: null,
+	
+	defeat: null,
+	
 	dragging: false,
 	
 	init: function() {
@@ -521,6 +529,24 @@ NodeTip = {
 		};
 		
 		NodeTip.tip = new Opentip("#tip", $("#tipPlaceholder").html(), { style: "myErrorStyle" });
+		
+		Opentip.styles.victoryStyle = {
+				  // Make it look like the alert style. If you omit this, it will default to "standard"
+				  extends: "glass",
+				  stem: false,
+				  hideTrigger: "closeButton"
+
+			};
+			
+		NodeTip.victory = new Opentip("#GameOver", $("#Victory").html(), "Game Over", { style: "victoryStyle" });
+		
+		Opentip.styles.defeatStyle = {
+				  // Make it look like the alert style. If you omit this, it will default to "standard"
+				  extends: "alert",
+				  stem: false,
+				  hideTrigger: "closeButton"
+
+			};	
 		
 	},
 	

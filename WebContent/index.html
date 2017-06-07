@@ -137,10 +137,19 @@
 				  	<button class="ui-button ui-widget ui-corner-all" id="StartGame">Start Game</button>
 				  </p>
 				 </fieldset>
-			</form>		 
-		</div>		
+			</form>
+		</div>
 		
 		<div id="nodeTip"></div>
+		
+		<div id="GameOver"></div>
+		<div id="Victory" style="display: none">
+			<h1>YOU WIN!</h1>
+		</div>
+		<div id="Defeat" style="display: none">
+			<h1>YOU lose</h1>
+			Robot <span id="Winner"></span> is the winner.
+		</div>
 		
 	<script id="scoresT" type="text/x-jsrender">
 	{^{for players}}
