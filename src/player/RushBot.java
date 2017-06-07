@@ -38,7 +38,7 @@ public class RushBot extends Robot {
 	    	
 	    	Star destination = wormhole.getExitPoint(this.getPosition());
 	    	
-	    	if (!this.getStarsVisitedThisRound().contains(destination.getName()))
+	    	if (!this.getStarsVisitedThisRound().contains(destination))
 	    		
 	    		starsNotVisited.add(destination);
 	    	
