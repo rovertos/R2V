@@ -119,8 +119,6 @@ Graph = {
 	
 	generateDefault: function(data){
 		
-		console.log(data);
-		
 		Graph.s = new sigma({ 
 	        graph: data,
 	        renderer: {
@@ -138,8 +136,6 @@ Graph = {
 	            doubleClickEnabled: false
 	        }
 		});
-		
-		console.log(Graph.s);
 		
 	},
 	

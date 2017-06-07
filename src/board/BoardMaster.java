@@ -153,7 +153,7 @@ public class BoardMaster {
 		
 	}
 	
-	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore, String starHopperMove, int starHopperBid){
+	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore, int backTrackPenalty, String starHopperMove, int starHopperBid){
 		
 		if (board.TURN > 0){
 			
@@ -171,11 +171,21 @@ public class BoardMaster {
 			
 			for (Robot robot: board.getRobots()){
 				
-				Star destination = robot.pickNewDestination(board);
+				Star destination = null;
+				
+				if (robot.getCredits() <= robot.getPosition().getSittingPlayers().size() * costMultiplier){
+				
+					destination = robot.getPosition();
+				
+				} else {
+					
+					destination = robot.pickNewDestination(board);
+					
+				}
 				
 				crowdMovement.registerSingleMove(robot, destination);
 				
-				selectedDestinations.put(robot.getName(), destination);
+				selectedDestinations.put(robot.getName(), destination);				
 				
 			}
 			
@@ -201,6 +211,16 @@ public class BoardMaster {
 						
 					}
 					
+				} else if (!robot.getPosition().equals(destination)){
+					
+					if (robot.getScore() > backTrackPenalty)
+					
+						robot.setScore(robot.getScore() - backTrackPenalty);
+						
+					else
+						
+						robot.setScore(0);
+					
 				}
 				
 				robot.moveToStar(destination);
@@ -222,6 +242,16 @@ public class BoardMaster {
 					board.starHopper.completeRound();
 					
 				}
+				
+			} else if (!board.starHopper.getPosition().equals(starHopperNewPosition)){
+				
+				if (board.starHopper.getScore() > backTrackPenalty)
+				
+					board.starHopper.setScore(board.starHopper.getScore() - backTrackPenalty);
+					
+				else
+						
+					board.starHopper.setScore(0);
 				
 			}
 			

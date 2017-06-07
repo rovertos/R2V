@@ -43,8 +43,10 @@ public class GameController extends HttpServlet {
 			
 			int stayingBonus = Integer.parseInt(request.getParameter("stbon"));
 			
-			int newStarScore = Integer.parseInt(request.getParameter("newsc"));
+			int newStarScore = Integer.parseInt(request.getParameter("newsc"));			
 			
+			int backTrackPenalty = Integer.parseInt(request.getParameter("btpen"));
+						
 			String starHopperMove = request.getParameter("shmov") != null ? request.getParameter("shmov") : boardMaster.getBoard().getStartingStar().getName();
 			
 			int starHopperBid = request.getParameter("shbid") != null ? Integer.parseInt(request.getParameter("shbid")) : 0;
@@ -57,11 +59,13 @@ public class GameController extends HttpServlet {
 			
 			System.out.println("newStarScore="+newStarScore);
 			
+			System.out.println("backTrackPenalty="+backTrackPenalty);
+			
 			System.out.println("starHopperMove="+starHopperMove);
 			
 			System.out.println("starHopperBid="+starHopperBid);
 			
-			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore, starHopperMove, starHopperBid);			
+			boardMaster.mobilizeTheRobots(costMultiplier, stayingBonus, newStarScore, backTrackPenalty, starHopperMove, starHopperBid);			
 			
 			PositionJSON position = FactoryJSON.makePosition(boardMaster.getBoard());
 			

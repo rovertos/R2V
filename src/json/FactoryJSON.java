@@ -171,6 +171,14 @@ public class FactoryJSON {
 		
 		position.setStarHopper(starHopperJSON);
 		
+		// Find winner if any
+		
+		if (playerList.get(0).getScore() > playerList.get(1).getScore() &&
+				
+				playerList.get(0).getRoundsCompleted() > playerList.get(1).getRoundsCompleted())
+			
+			position.setWinner(playerList.get(0).getName());
+		
 		return position;
 		
 	}

@@ -14,6 +14,8 @@ public class PositionJSON implements Serializable {
 	private List<RankedPlayerJSON> players;
 	
 	private List<RobotsJSON> robots;
+	
+	private String winner;
 
 	public List<CrowdJSON> getCrowds() {
 		return crowds;
@@ -45,6 +47,14 @@ public class PositionJSON implements Serializable {
 
 	public void setRobots(List<RobotsJSON> robots) {
 		this.robots = robots;
+	}
+
+	public String getWinner() {
+		return winner;
+	}
+
+	public void setWinner(String winner) {
+		this.winner = winner;
 	}	
 	
 }

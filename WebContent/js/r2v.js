@@ -75,6 +75,7 @@ $(document).ready(function(){
 	      context.strokeStyle = '#282828';
 	      context.stroke();
 	      
+	      
 	      // Draw the border:
 	      context.beginPath();
 	      context.arc(
@@ -86,7 +87,11 @@ $(document).ready(function(){
 	        false
 	      );
 	      context.lineWidth = size / 3;
-	      context.strokeStyle = node.color || settings('defaultNodeColor');
+	      if (Game.posPlayers["you"] && node.id == Game.posPlayers["you"].location && Game.playerTrapped){	    	  
+	    	  context.strokeStyle = 'red';	    	  
+	      } else {
+	    	  context.strokeStyle = node.color || settings('defaultNodeColor');
+	      }
 	      context.stroke();
 	      
 	      // Player position
@@ -105,8 +110,6 @@ $(document).ready(function(){
 		      context.strokeStyle = "white";
 		      context.stroke();	    	  
 	      }
-	      
-	      console.log(Game.posPlayers["you"].visited);
 	      
 	      if (Game.posPlayers["you"].visited.indexOf(node.id) > -1){
 	    	  
@@ -220,6 +223,8 @@ Game = {
 	
 	posStars: [],
 	
+	playerTrapped: false,
+	
 	init: function(){
 		
 		var exportMin = Graph.exportMin();
@@ -258,7 +263,11 @@ Game = {
 	
 	move: function(){
 		
-		Game.starHopperMove(null,null);
+		var playerStaying = Game.posPlayers["you"] ? Game.posPlayers["you"].location : $("#StartingNode").val();
+		
+		console.log(playerStaying);
+		
+		Game.starHopperMove(playerStaying,0);
 		
 	},
 	
@@ -270,22 +279,22 @@ Game = {
 		
 		var newStarScore = $("#NewStarScore").val();
 		
-		var args;
+		var backTrackPenalty = $("#BackTrackPenalty").val();
 		
-		if (starhopperMove != null)
-			
-			args = { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore, shmov: starhopperMove, shbid: starhopperBid}
-		
-		else
-			
-			args = { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore };
-		
+		var args = { cmult: costMultiplier, stbon: stayingBonus, newsc: newStarScore, shmov: starhopperMove, shbid: starhopperBid, btpen: backTrackPenalty};
+				
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/ctrl",
 		    data: args,
 		    dataType: "json",
 		    success: function(data) {
+		    	
+		    	if (data.winner){
+		    		
+		    		Game.endGame(data.winner);
+
+		    	}		    		
 		    	
 		    	if (data.crowds)
 		    		
@@ -368,6 +377,22 @@ Game = {
 			
 		});
 		
+		if (data.starHopper.credits <= Game.posStars[data.starHopper.location].total * $("#CostMultiplier").val()){
+			
+			if (!Game.playerTrapped)
+				
+				Game.startAuto();
+			
+			Game.playerTrapped = true;
+			
+		} else {
+			
+			Game.playerTrapped = false;
+			
+			Game.stopAuto();
+			
+		}
+		
 		Graph.adjustNodeSizes(Game.position.crowds);		
 		
 	},
@@ -376,7 +401,7 @@ Game = {
 		
 		if (Game.initialized)
 		
-			Game.interval = window.setInterval(Game.move, 3000);
+			Game.interval = window.setInterval(Game.move, 1000);
 		
 	},
 	
@@ -385,6 +410,22 @@ Game = {
 		if (Game.initialized)
 		
 			window.clearInterval(Game.interval);
+		
+	},
+	
+	endGame: function(winner){
+		
+		Game.stopAuto();
+		
+		if (winner === "YOU"){
+			
+			alert("YOU WIN!");
+			
+		} else {
+			
+			alert("You lose... Robot " + winner + " is the winner.");
+			
+		}		
 		
 	}
 		
@@ -460,7 +501,7 @@ Control = {
 		
 		Graph.adjustNodeSizes(Game.position.crowds);
 		
-	} 
+	}
 	
 }
 
@@ -523,10 +564,8 @@ NodeTip = {
 	
 	click: function(e){
 		
-		if (!NodeTip.dragging){
+		if (!NodeTip.dragging && !Game.playerTrapped){
 		
-			console.log(e.data.node.id);
-			
 			var neighbors = Graph.s.graph.neighborhood(Game.posPlayers["you"].location);
 			
 			for (var i=0; i<neighbors.nodes.length; i++){

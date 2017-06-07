@@ -19,17 +19,9 @@ public class RandomBot extends Robot {
 		
 		Star chosenDestination = null;
 		
-		if (this.getCredits() < this.getPosition().getSittingPlayers().size()){
-			
-			chosenDestination = this.getPosition();
-			
-		} else {
+		Star randomDestination = AI.getRandomDestination(board, this.getPosition(), false);
 		
-			Star randomDestination = AI.getRandomDestination(board, this.getPosition(), false);
-			
-			chosenDestination = randomDestination;
-		
-		}
+		chosenDestination = randomDestination;
 		
 		return chosenDestination;
 		
