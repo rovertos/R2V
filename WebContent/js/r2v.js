@@ -197,7 +197,7 @@ $(document).ready(function(){
 	
 	$("#sbut6").click(function() {
 		
-		Game.stopAuto();
+		alert(Graph.exportMin());
 		
 	});	
 	
@@ -574,11 +574,11 @@ NodeTip = {
 			
 			$("#tipPlaceholder").html(tipHtml);
 			
+			NodeTip.tip.setContent($("#tipPlaceholder").html());
+			
+			NodeTip.tip.show();			
+			
 		}
-		
-		NodeTip.tip.setContent($("#tipPlaceholder").html());
-		
-		NodeTip.tip.show();
 		
 	},
 	

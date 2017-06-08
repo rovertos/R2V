@@ -22,7 +22,7 @@ Graph = {
 		'img/nr.png'
 	],
 	
-	init: function(graphType){
+	init: function(graphStr){
 		
 		if (Graph.s){
 		
@@ -47,19 +47,9 @@ Graph = {
 			      if (++loaded === Graph.images.length){
 			        // Instantiate sigma:
 			    	
-			    	if (graphType == 0){
+			    	if (graphStr && graphStr.indexOf("-") > 0 && graphStr.indexOf(",") > 0){
 			    		
-			    		$.ajax({
-			    		    type: "GET",  
-			    		    url: "http://localhost:8080/R2V/graph1.html",
-			    		    async: false,
-			    		    dataType: "json",
-			    		    success: function(data) {
-			    		    	
-					    		Graph.generateDefault(data);
-			    		    	
-			    		    }
-			    		});
+			    		Graph.loadGraph(graphStr);
 			    		
 			    	} else {
 			    		
@@ -117,14 +107,55 @@ Graph = {
 		
 	},
 	
-	generateDefault: function(data){
+	loadGraph: function(graphStr){
 		
-		Graph.s = new sigma({ 
-	        graph: data,
+		var adjacencies = graphStr.trim().split("-");
+		
+		var r = 0;
+		
+		var e = 0;
+		
+		// Create nodes
+		
+		for (var i=0; i<adjacencies.length; i++){
+			
+			var node = adjacencies[i].substr(0,adjacencies[i].indexOf(","));
+			
+			 Graph.g.nodes.push({
+			    id: 'n' + i,
+			    label: 'n' + i,
+			    x: r++,
+			    y: r++,
+			    size: 10
+			});			
+			
+		}
+		
+		// Create edges
+		
+		for (var i=0; i<adjacencies.length; i++){
+			
+			var nodes = adjacencies[i].split(",");
+			
+			for (var j=1; j<nodes.length; j++){
+				
+				Graph.g.edges.push({
+					id: 'e' + e++,
+					source: nodes[0],
+					target: nodes[j],
+					size: 10
+				});				
+				
+			}
+		
+		}
+						
+		Graph.s = new sigma({
+		  	graph: Graph.g,
 	        renderer: {
 	            container: document.getElementById('r2v'),
 	            type: 'canvas'
-	          },            
+	          },
 	        settings: {
 	            defaultNodeColor: Graph.defaultNodeColor,
 	            font: 'Ken',
@@ -135,7 +166,7 @@ Graph = {
 	            maxNodeSize: 20,
 	            doubleClickEnabled: false
 	        }
-		});
+		});	
 		
 	},
 	
