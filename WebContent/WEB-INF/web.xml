@@ -16,6 +16,10 @@
   <servlet>
     <servlet-name>GameInitializer</servlet-name>
     <servlet-class>servlet.GameInitializer</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ChromaTweaker</servlet-name>
+    <servlet-class>servlet.ChromaTweaker</servlet-class>
   </servlet>  
   <servlet-mapping>
     <servlet-name>GameController</servlet-name>
@@ -25,4 +29,8 @@
     <servlet-name>GameInitializer</servlet-name>
     <url-pattern>/init</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ChromaTweaker</servlet-name>
+    <url-pattern>/tweak</url-pattern>
+  </servlet-mapping>  
 </web-app>

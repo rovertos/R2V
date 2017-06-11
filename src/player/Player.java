@@ -143,16 +143,35 @@ public class Player implements Comparable<Player> {
 		
 	}
 
-	@Override
 	public int compareTo(Player otherPlayer) {
 		
-		if (otherPlayer instanceof Player){
-			
-			return ((Player)otherPlayer).score - this.score;
-			
-		} else 
+		int result = 0;
 		
-			return 0;
+		if (otherPlayer.score == this.score){
+			
+			if (otherPlayer.roundsCompleted == this.roundsCompleted){
+				
+				if (otherPlayer.starsVisitedThisRound.size() == this.starsVisitedThisRound.size()){
+					
+					result = otherPlayer.credits - this.credits;
+					
+				} else {
+					
+					result = otherPlayer.starsVisitedThisRound.size() - this.starsVisitedThisRound.size();
+					
+				}					
+				
+			} else {
+				
+				result = otherPlayer.starsVisitedThisRound.size() - this.starsVisitedThisRound.size();
+				
+			}
+			
+		} else
+		
+			result = otherPlayer.score - this.score;
+		
+		return result;
 		
 	}
 	

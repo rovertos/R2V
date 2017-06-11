@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Crowds 'n' Stars</title>
 		<link rel="stylesheet" type="text/css" href="css/opentip.css">
 		<link rel="stylesheet" type="text/css" href="css/jquery-ui.theme.css">
 		<link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.css">
@@ -24,56 +25,56 @@
 	</head>
 	<body>
 		<div id="r2v"></div>
-			<div id="panel">
-				<div id="top-panel">
-					<div id="timer">
-						<div id="playerRank"></div>
-					</div>
-					<div id="score">
-						<div id="playerScore"></div>
-					</div>
-					<div class="clear"></div>
+		<div id="panel">
+			<div id="top-panel">
+				<div id="timer">
+					<div id="playerRank"></div>
 				</div>
-				<div id="mid-panel">
-					<input class="sbut" id="sbut1" type="button"/>
-					<input class="sbut" id="sbut2" type="button"/>
-					<input class="sbut" id="sbut3" type="button"/>
-					<input class="sbut" id="sbut4" type="button"/>
-					<input class="sbut" id="sbut5" type="button"/>
-					<input class="sbut" id="sbut6" type="button"/>					
+				<div id="score">
+					<div id="playerScore"></div>
 				</div>
-				<div id="bottom-panel">
-					<div id="control">
-						<div id="controlInner">
-							<table class="score-table">
-								<thead>
-									<tr>
-										<th>Robots</th>
-										<th>Active</th>
-										<th>Initial</th>
-									</tr>
-								<thead>
-								<tbody id="robotsBody"></tbody>							
-							</table>
-						</div>
-						<div id="controlInner2">
-							<table class="score-table">
-								<thead>
-									<tr>
-										<th>Player</th>
-										<th>Score</th>
-										<th>Credits</th>
-										<th>Stars</th>
-									</tr>
-								<thead>
-								<tbody id="scoresBody"></tbody>
-							</table>
-						</div>
+				<div class="clear"></div>
+			</div>
+			<div id="mid-panel">
+				<input class="sbut" id="sbut1" type="button"/>
+				<input class="sbut" id="sbut2" type="button"/>
+				<input class="sbut" id="sbut3" type="button"/>
+				<input class="sbut" id="sbut4" type="button"/>
+				<input class="sbut" id="sbut5" type="button"/>
+				<input class="sbut" id="sbut6" type="button"/>					
+			</div>
+			<div id="bottom-panel">
+				<div id="control">
+					<div id="controlInner">
+						<table class="score-table">
+							<thead>
+								<tr>
+									<th>Robots</th>
+									<th>Active</th>
+									<th>Initial</th>
+								</tr>
+							<thead>
+							<tbody id="robotsBody"></tbody>							
+						</table>
+					</div>
+					<div id="controlInner2">
+						<table class="score-table">
+							<thead>
+								<tr>
+									<th>Player</th>
+									<th>Score</th>
+									<th>Credits</th>
+									<th>Stars</th>
+								</tr>
+							<thead>
+							<tbody id="scoresBody"></tbody>
+						</table>
 					</div>
 				</div>
 			</div>
-			<div data-ot="The content" id="tip" data-ot-delay="2" style="display: none"></div>
-			<div id="tipPlaceholder" style="display: none"></div>
+		</div>
+		<div data-ot="The content" id="tip" data-ot-delay="2" style="display: none"></div>
+		<div id="tipPlaceholder" style="display: none"></div>
 		
 		
 		<div id="interface" class="ui-widget-content">
@@ -131,16 +132,60 @@
 			  <label for="BackTrackPenalty">BackTrackPenalty*:</label>
 			  <input id="BackTrackPenalty" class="spinner" name="value" value="10">
 			</p>
-			</div>			
-			<h3>Game control</h3>
+			</div>
+			<h3>Experimental</h3>
+			<div>
 			<form>
 				<fieldset style="border: 0px">
+					<p>
+					  <label for="Sequence">ChromaSequence:</label>
+					  <input id="Sequence" class="spinner" name="value" value="3">
+					</p>								
+				  <label for="Bidirectional">Bidirectional:</label>
+				  <select name="Bidirectional" id="Bidirectional">
+				  	<option value="1" selected="selected">TRUE</option>
+				  	<option value="0">FALSE</option>
+				  </select>
+				 </fieldset>
+			</form>
+			</div>
+			<h3>Map Setup</h3>
+			<form>
+				<fieldset style="border: 0px">	
+				  <label for="Chroma">Chroma:</label>		  
+				  <select name="Chroma" id="Chroma">
+				  	<option value="0" selected="selected">HOMOGENOUS</option>
+				  	<option value="2">RANDOM 2</option> 	
+				  	<option value="3">RANDOM 3</option>
+				  	<option value="4">RANDOM 4</option>	  	
+				  	<option value="5">RANDOM 5</option>
+				  </select>
+				  <p/>
 				  <label for="StartingNode">StartingNode:</label>
-				  <select name="StartingNode" id="StartingNode"></select>
+				  <select name="StartingNode" class="NodeList" id="StartingNode"></select>
 				  <p>
-				  	<button class="ui-button ui-widget ui-corner-all" id="StartGame">Start Game</button>
+				  	<button class="ui-button ui-widget ui-corner-all" id="StartGame">Apply Setup</button>
 				  </p>
 				 </fieldset>
+			</form>
+			<h3>Chroma Anomaly</h3>
+			<form>
+				<fieldset style="border: 0px">	
+				  <label for="AnomalyNode">AnomalyNode:</label>
+				  <select name="AnomalyNode" class="NodeList" id="AnomalyNode"></select>
+				  <p/>
+				  <label for="AnomalyColor">AnomalyColor:</label>		  
+				  <select name="AnomalyColor" id="AnomalyColor">
+				  	<option value="0">GREEN</option>
+				  	<option value="1">BLUE</option> 	
+				  	<option value="2">ORANGE</option>
+				  	<option value="3">PURPLE</option>	  	
+				  	<option value="4" selected="selected">RED</option>
+				  </select>
+				  <p>
+				  	<button class="ui-button ui-widget ui-corner-all" id="ApplyAnomaly">Apply Anomaly</button>
+				  </p>				  				  		
+				</fieldset>
 			</form>
 		</div>
 		
@@ -198,6 +243,10 @@
 			<tr>
 				<td>Visited</td>
 				<td>{{:visited}}</td>
+			</tr>
+			<tr>
+				<td>Score</td>
+				<td>{{:score}}</td>
 			</tr>
 		</tbody>
 	</table>

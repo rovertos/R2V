@@ -4,10 +4,9 @@ Interface = {
 		
 		$("#interface").accordion().draggable();
 		
-		var defaultGraph = "n0,n16,n6-n1,n4,n5,n18-n2,n14,n13-n3,n6,n7,n9-n4,n1,n8,n11,n21-n5,n1,n13,n7,n20-" +
-							"n6,n3,n9,n0-n7,n3,n18,n5-n8,n4,n19,n12,n14-n9,n6,n3,n17-n10,n17,n20,n13-" +
-							"n11,n4,n15-n12,n8,n21-n13,n5,n10,n2-n14,n2,n8,n21-n15,n11,n18-n16,n0,n20-n17,n10,n9,n19-"+
-							"n18,n7,n15,n19,n1-n19,n8,n18,n17-n20,n10,n16,n5-n21,n12,n14,n4";
+		var defaultGraph = "n0,n2,n3,n4,n5,n1-n1,n7,n8-n2,n6,n7-n3,n6,n10-n4,n9,n10-n5,n8,n9-n6,n11,n12,n19-n7,n12,n13,n17-"+
+							"n8,n13,n14,n25-n9,n14,n15,n23-n10,n11,n15,n21-n11,n20-n12,n18-n13,n16-n14,n24-n15,n22-n16,n17,n25-"+
+							"n17,n18-n18,n19-n19,n20-n20,n21-n21,n22-n22,n23-n23,n24-n24,n25-n25";
 		
 		$("#GraphString").val(defaultGraph);
 		
@@ -31,9 +30,22 @@ Interface = {
 		
 		$("#StartingNode").selectmenu();
 		
+		$("#Chroma").selectmenu();
+		
+		$("#Bidirectional").selectmenu();
+		
+		$("#AnomalyNode").selectmenu();
+		
+		$("#AnomalyColor").selectmenu();
+		
+		$("#Sequence").spinner({
+			  min: 2,
+			  max: 6
+		});
+		
 		$("#GenerateRndMap").click(function(){
 			
-			Graph.init(null);
+			Graph.load(null);
 			
 			return false;
 			
@@ -41,7 +53,7 @@ Interface = {
 		
 		$("#LoadString").click(function(){
 			
-			Graph.init($("#GraphString").val());
+			Graph.load($("#GraphString").val());
 			
 			return false;
 			
@@ -55,6 +67,14 @@ Interface = {
 			
 		});
 		
+		$("#ApplyAnomaly").click(function(){
+			
+			Game.tweakChroma($("#AnomalyNode").val(),$("#AnomalyColor").val());
+						
+			return false;
+			
+		});		
+		
 		$(".ui-button").button();
 		
 		$("#StartGame").button("disable");
@@ -63,22 +83,28 @@ Interface = {
 	
 	enableStartGame: function(){
 		
-		$("#StartingNode").selectmenu('destroy');
-		
-		$("#StartingNode").empty();
-		
-		var options = [];
-		
-		$.each(Graph.s.graph.nodes(), function(i,node){
+		$(".NodeList").each(function(){
 			
-			options.push("<option value='" + node.label + "'>" + node.id + "</option>");
+			console.log($(this));
+			
+			$(this).selectmenu('destroy');
+			
+			$(this).empty();
+			
+			var options = [];
+			
+			$.each(Graph.s.graph.nodes(), function(i,node){
+				
+				options.push("<option value='" + node.label + "'>" + node.id + "</option>");
+				
+			});
+			
+			$(this).append(options.join("")).selectmenu({ style: 'dropdown' });
+		    
+			$(this).val(Graph.s.graph.nodes()[0].id).selectmenu('refresh');
 			
 		});
 		
-	    $('#StartingNode').append(options.join("")).selectmenu({ style: 'dropdown' });
-	    
-	    $('#StartingNode').val(Graph.s.graph.nodes()[0].id).selectmenu('refresh')
-	    
 	    $("#StartGame").button("enable");
 		
 	}

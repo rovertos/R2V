@@ -1,8 +1,8 @@
 package board;
 
-import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
-public class Constellation extends SimpleGraph<Star, Wormhole> {
+public class Constellation extends SimpleWeightedGraph<Star, Wormhole> {
 
 	private static final long serialVersionUID = 1L;
 

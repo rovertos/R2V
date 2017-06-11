@@ -22,21 +22,9 @@ Graph = {
 		'img/nr.png'
 	],
 	
-	init: function(graphStr){
-		
-		if (Graph.s){
-		
-			Graph.s.graph.clear();
-			
-			$("#r2v").empty();
-			
-			Graph.g = { nodes: [], edges: [] };
-			
-			Graph.connections= [];
-			
-			Graph.consArray = [];
-		
-		}
+	load: function(graphStr){
+				
+		Graph.clearGraph();
 		
 		var loaded = 0;
 		
@@ -49,7 +37,7 @@ Graph = {
 			    	
 			    	if (graphStr && graphStr.indexOf("-") > 0 && graphStr.indexOf(",") > 0){
 			    		
-			    		Graph.loadGraph(graphStr);
+			    		Graph.loadFromString(graphStr);
 			    		
 			    	} else {
 			    		
@@ -107,7 +95,35 @@ Graph = {
 		
 	},
 	
-	loadGraph: function(graphStr){
+	clearGraph: function(){
+		
+		if (Graph.s){
+			
+			Graph.s.graph.clear();
+			
+			$("#r2v").empty();
+			
+			Graph.g = { nodes: [], edges: [] };
+			
+			Graph.connections= [];
+			
+			Graph.consArray = [];
+			
+			Game.patterns = [];
+			
+			Game.wormholes = [];
+		
+		}
+		
+		if (Designer.active){
+			
+			Designer.destroy();
+			
+		}
+		
+	},
+	
+	loadFromString: function(graphStr){
 		
 		var adjacencies = graphStr.trim().split("-");
 		
@@ -119,15 +135,15 @@ Graph = {
 		
 		for (var i=0; i<adjacencies.length; i++){
 			
-			var node = adjacencies[i].substr(0,adjacencies[i].indexOf(","));
+			var node = adjacencies[i].indexOf(",") > -1 ? adjacencies[i].substr(0,adjacencies[i].indexOf(",")) : adjacencies[i];
 			
 			 Graph.g.nodes.push({
-			    id: 'n' + i,
-			    label: 'n' + i,
+			    id: node,
+			    label: node,
 			    x: r++,
 			    y: r++,
 			    size: 10
-			});			
+			});
 			
 		}
 		
@@ -140,33 +156,18 @@ Graph = {
 			for (var j=1; j<nodes.length; j++){
 				
 				Graph.g.edges.push({
-					id: 'e' + e++,
+					id: nodes[0] + "_" + nodes[j],
 					source: nodes[0],
 					target: nodes[j],
-					size: 10
-				});				
+					size: 10,
+					type: 'r2v'
+				});
 				
 			}
 		
 		}
 						
-		Graph.s = new sigma({
-		  	graph: Graph.g,
-	        renderer: {
-	            container: document.getElementById('r2v'),
-	            type: 'canvas'
-	          },
-	        settings: {
-	            defaultNodeColor: Graph.defaultNodeColor,
-	            font: 'Ken',
-	            hoverFont: 'Ken',
-	            labelHoverBGColor: 'node',
-	            edgeColor: 'default',
-	            minNodeSize: 10,
-	            maxNodeSize: 20,
-	            doubleClickEnabled: false
-	        }
-		});	
+		Graph.newSigma();
 		
 	},
 	
@@ -199,10 +200,11 @@ Graph = {
 		    var r2vRndConsArray = Graph.r2vRndCons(cons, i);
 		    for (var j = 0; j < cons; j++){
 				   Graph.g.edges.push({
-				    id: 'e' + edge++,
+				    id: 'n' + i + "_" + 'n' + r2vRndConsArray[j],
 				    source: 'n' + i,
 				    target: 'n' + r2vRndConsArray[j],
-				    size: 10
+				    size: 10,
+					type: 'r2v'
 				  });
 				  Graph.consArray[r2vRndConsArray[j]]++;
 				  Graph.connections[cs++] = i + '-' + r2vRndConsArray[j];
@@ -210,6 +212,12 @@ Graph = {
 		    }
 		}
 				
+		Graph.newSigma();	
+		
+	},
+	
+	newSigma: function(){
+		
 		Graph.s = new sigma({
 		  	graph: Graph.g,
 	        renderer: {
@@ -224,25 +232,51 @@ Graph = {
 	            edgeColor: 'default',
 	            minNodeSize: 10,
 	            maxNodeSize: 20,
-	            doubleClickEnabled: false   
+	            doubleClickEnabled: false
 	        }
 		});		
 		
-	},	
+	},
 	
 	exportMin: function(){
 		
+		if (Designer.active){			
+			Graph.s.graph.dropNode("en1");
+			Graph.s.graph.dropNode("en2");
+			Graph.s.graph.dropNode("en3");
+			Graph.s.graph.dropNode("en4");		
+		}
+		
 		var exportMin = "";
+		
+		var alreadyJoined = [];
+		
 		$.each(Graph.s.graph.nodes(),function(index,node){
+			
 			var neighbors = Graph.s.graph.neighborhood(node.id);
-			for (var i=0; i<neighbors.nodes.length; i++){
-				exportMin += neighbors.nodes[i].id;
-				if (i+1<neighbors.nodes.length)
-					exportMin += ",";
+			
+			exportMin += node.id;
+			
+			for (var i=1; i<neighbors.nodes.length; i++){
+				
+				if (alreadyJoined.indexOf(neighbors.nodes[i].id + "_" + node.id) < 0){
+				
+					exportMin += "," + neighbors.nodes[i].id;
+					
+					alreadyJoined.push(node.id + "_" + neighbors.nodes[i].id);
+				
+				}
+				
 			}
+			
 			exportMin += "-";
+			
 		});
+		
 		exportMin = exportMin.substring(0,exportMin.length-1);
+		
+		console.log(exportMin);
+		
 		return exportMin;
 		
 	},
@@ -299,4 +333,149 @@ Graph = {
 		return (Graph.connections.indexOf(key1) > -1 || Graph.connections.indexOf(key2) > -1);	
 	}
 	
+}
+
+Designer = {
+		
+	active: true,
+	
+	dom: null,
+	
+	n: 0,
+	
+	nodeClicked: null,
+	
+	init: function(){
+		
+		Designer.active = true;
+		
+		Graph.newSigma();
+		
+		Designer.dom = document.querySelector('#r2v canvas:last-child');
+		
+		var h = $("#r2v").height();
+		
+		var w = $("#r2v").width();
+		
+		Graph.s.graph.addNode({
+			id: 'en1',
+			label: 'en1',
+			x: -w/2,
+			y: -h/2,
+			color: 'grey',
+			size: 10
+		});
+		
+		Graph.s.graph.addNode({
+			id: 'en2',
+			label: 'en2',
+			x: w/2,
+			y: h/2,
+			color: 'grey',			
+			size: 10
+		});
+		
+		Graph.s.graph.addNode({
+			id: 'en3',
+			label: 'en3',
+			x: -w/2,
+			y: h/2,
+			color: 'grey',			
+			size: 10
+		});
+		
+		Graph.s.graph.addNode({
+			id: 'en4',
+			label: 'en4',
+			x: w/2,
+			y: -h/2,
+			color: 'grey',			
+			size: 10
+		});		
+		
+		Designer.dom.addEventListener('dblclick', Designer.addNode);
+		
+		Graph.s.bind('clickNode', Designer.clickNode);
+		
+	},
+	
+	clickNode: function(e){
+		
+		if (Designer.nodeClicked && (e.data.node.id == Designer.nodeClicked)){
+			
+			Graph.s.graph.dropNode(e.data.node.id);
+			
+			Designer.nodeClicked = null;
+			
+			Graph.s.refresh();
+			
+		} else if (Designer.nodeClicked){
+			
+		   Graph.s.graph.addEdge({
+			   
+			    id: Designer.nodeClicked + "_" + e.data.node.id,
+			    
+			    source: Designer.nodeClicked,
+			    
+			    target: e.data.node.id,
+			    
+			    size: 10,
+			    
+				type: 'r2v'
+
+			  });
+			
+			Graph.s.graph.nodes(Designer.nodeClicked).color = Graph.defaultNodeColor;
+			
+			Graph.s.refresh({ skipIndexation: true });
+			
+			Designer.nodeClicked = null;
+			
+		} else {
+			
+			Designer.nodeClicked = e.data.node.id;
+			
+			e.data.node.color = 'red';
+			
+			Graph.s.refresh({ skipIndexation: true });			
+			
+		}
+		
+	},
+	
+	addNode: function(e){
+		
+	    var x,
+        	y,
+        	p
+
+	    x = sigma.utils.getX(e) - Designer.dom.offsetWidth / 2;
+	    y = sigma.utils.getY(e) - Designer.dom.offsetHeight / 2;
+
+	    p = Graph.s.camera.cameraPosition(x, y);
+	    x = p.x;
+	    y = p.y;
+	    
+		Graph.s.graph.addNode({
+			id: 'n' + Designer.n,
+			label: 'n' + Designer.n,
+			x: x,
+			y: y,
+			size: 1
+		});
+		
+		Designer.n++;
+		
+		Graph.s.refresh();
+	    
+	},
+	
+	destroy: function(){
+		
+		Designer.dom.removeEventListener("click", Designer.addNode);
+				
+		Designer.active = false;
+		
+	}
+		
 }

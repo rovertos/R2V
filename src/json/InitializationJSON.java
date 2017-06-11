@@ -8,6 +8,10 @@ public class InitializationJSON implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private List<StarJSON> stars;
+	
+	private List<WormholeJSON> wormholes;
+	
+	private List<PatternJSON> patterns;	
 
 	public List<StarJSON> getStars() {
 		
@@ -19,6 +23,32 @@ public class InitializationJSON implements Serializable {
 		
 		this.stars = stars;
 		
-	}	
+	}
+
+	public List<WormholeJSON> getWormholes() {
+		
+		return wormholes;
+		
+	}
+
+	public void setWormholes(List<WormholeJSON> wormholes) {
+		
+		this.wormholes = wormholes;
+		
+	}
+
+	public List<PatternJSON> getPatterns() {
+		
+		return patterns;
+		
+	}
+
+	public void setPatterns(List<PatternJSON> patterns) {
+		
+		this.patterns = patterns;
+		
+	}
+	
+	
 
 }

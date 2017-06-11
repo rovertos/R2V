@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import pattern.PatternRegistry;
 import player.Player;
 import player.Robot;
 import player.StarHopper;
@@ -20,8 +21,10 @@ public class Board {
 	
 	private Star startingStar;
 	
+	private PatternRegistry preg;
+	
 	public int TURN = 0;
-
+	
 	public Star getStar(String nodeId){
 		
 		return starMap.get(nodeId);
@@ -54,8 +57,16 @@ public class Board {
 
 	public List<Robot> getRobots() {
 		return robots;
-	}
+	}	
 	
+	public void setPreg(PatternRegistry preg) {
+		this.preg = preg;
+	}
+
+	public PatternRegistry getPreg() {
+		return preg;
+	}
+
 	public List<Player> getPlayers(){
 		
 		ArrayList<Player> players = new ArrayList<Player>();

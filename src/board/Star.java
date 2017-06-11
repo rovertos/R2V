@@ -3,6 +3,7 @@ package board;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import player.Player;
 
@@ -17,6 +18,8 @@ public class Star implements Serializable {
 	private List<Player> playersVisited;
 	
 	private Integer color;
+	
+	public int score;
 
 	public Star(String name){
 		
@@ -81,6 +84,14 @@ public class Star implements Serializable {
 	public void setColor(Integer color) {
 		
 		this.color = color;
+		
+	}
+	
+	public void calculateScore(Board board, int maxScore){
+		
+		double visitedFactor = (board.getPlayers().size() - getPlayersVisited().size()) / (double)board.getPlayers().size();
+		
+		this.score = new Double(Math.floor(maxScore * visitedFactor)).intValue();
 		
 	}
 

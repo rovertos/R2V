@@ -5,6 +5,58 @@ $(document).ready(function(){
 	
 	sigma.utils.pkg('sigma.canvas.nodes');
 	
+	sigma.utils.pkg('sigma.canvas.edges');
+	
+	sigma.canvas.edges.r2v = function(edge, source, target, context, settings) {
+	  var color = edge.color,
+	      prefix = settings('prefix') || '',
+	      edgeColor = settings('edgeColor'),
+	      defaultNodeColor = settings('defaultNodeColor'),
+	      defaultEdgeColor = settings('defaultEdgeColor');
+
+	  if (!color)
+		    switch (edgeColor) {
+		      case 'source':
+		        color = source.color || defaultNodeColor;
+		        break;
+		      case 'target':
+		        color = target.color || defaultNodeColor;
+		        break;
+		      default:
+		        color = defaultEdgeColor;
+		        break;
+		    }	  
+	  
+	  var weight;
+	  
+	  if (Game.wormholes[source.id + "_" + target.id]){
+		  
+		  weight = (Game.wormholes[source.id + "_" + target.id].weight - 1)*10+1;
+		  
+	  } else if (Game.wormholes[target.id + "_" + source.id]){
+		  
+		  weight = (Game.wormholes[target.id + "_" + source.id].weight - 1)*10+1;
+		  
+	  } else {
+		  
+		  weight = 1;
+		  
+	  }
+	  	  
+	  context.strokeStyle = color;
+	  context.lineWidth = weight;
+	  context.beginPath();
+	  context.moveTo(
+	    source[prefix + 'x'],
+	    source[prefix + 'y']
+	  );
+	  context.lineTo(
+	    target[prefix + 'x'],
+	    target[prefix + 'y']
+	  );
+	  context.stroke();
+	};
+	
 	sigma.canvas.nodes.image = (function() {
 	  var _cache = {},
 	      _loading = {},
@@ -111,7 +163,7 @@ $(document).ready(function(){
 		      context.stroke();	    	  
 	      }
 	      
-	      if (Game.posPlayers["you"].visited.indexOf(node.id) > -1){
+	      if (Game.posPlayers["you"] && Game.posPlayers["you"].visited.indexOf(node.id) > -1){
 	    	  
 		      context.beginPath();
 		      context.arc(
@@ -199,7 +251,9 @@ $(document).ready(function(){
 		
 		alert(Graph.exportMin());
 		
-	});	
+	});
+	
+	Designer.init();
 	
 });
 
@@ -223,9 +277,19 @@ Game = {
 	
 	posStars: [],
 	
+	patterns: [],
+	
+	wormholes: [],
+	
 	playerTrapped: false,
 	
 	init: function(){
+		
+		if (Designer.active){
+			
+			Designer.destroy();
+			
+		}
 		
 		var exportMin = Graph.exportMin();
 		
@@ -237,10 +301,20 @@ Game = {
 		
 		var totRushBots = $("#RushBots").val();
 		
+		var chroma = $("#Chroma").val();
+		
+		var sequence = $("#Sequence").val();
+		
+		var bidirectional = $("#Bidirectional").val();
+		
+		Game.patterns = [];
+		
+		Game.wormholes = [];
+				
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/init",
-		    data: { min: exportMin, start: startingNodeId, creds: startingCredits, rnds: totRandomBots, rush: totRushBots},
+		    data: { min: exportMin, start: startingNodeId, creds: startingCredits, rnds: totRandomBots, rush: totRushBots, chrm: chroma, exseq: sequence, exbid: bidirectional},
 		    dataType: "json",
 		    success: function(data) {
 		    	
@@ -254,18 +328,70 @@ Game = {
 					
 				});
 				
+				$.each(data.patterns, function(i,pattern){
+					
+					Game.patterns[pattern.sequence.join(",")] = pattern;
+					
+				});
+				
+				$.each(data.wormholes, function(i,wormhole){
+					
+					Game.wormholes[wormhole.name] = wormhole;
+					
+				});				
+				
 				Game.move();
+				
+				Graph.s.refresh({ skipIndexation: true });
 		    	
 		    }
 		});
 		
 	},
 	
+	tweakChroma: function(anomalyNode,color){
+		
+		Game.patterns = [];
+		
+		Game.wormholes = [];		
+		
+		$.ajax({
+		    type: "POST",  
+		    url: "http://localhost:8080/R2V/tweak",
+		    data: { anomaly: anomalyNode, color: color },
+		    dataType: "json",
+		    success: function(data) {
+		    	
+				$.each(data.stars, function(i,star){
+					
+					Graph.s.graph.nodes(star.name).type = 'image';
+					
+					Graph.s.graph.nodes(star.name).url = Graph.images[star.colorIndex];
+					
+				});
+				
+				$.each(data.patterns, function(i,pattern){
+					
+					Game.patterns[pattern.sequence.join(",")] = pattern;
+					
+				});
+				
+				$.each(data.wormholes, function(i,wormhole){
+					
+					Game.wormholes[wormhole.name] = wormhole;
+					
+				});				
+								
+				Graph.s.refresh({ skipIndexation: true });
+		    	
+		    }
+		});		
+		
+	},
+	
 	move: function(){
 		
 		var playerStaying = Game.posPlayers["you"] ? Game.posPlayers["you"].location : $("#StartingNode").val();
-		
-		console.log(playerStaying);
 		
 		Game.starHopperMove(playerStaying,0);
 		

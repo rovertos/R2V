@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.jgrapht.alg.ChromaticNumber;
 
+import pattern.Pattern;
+import pattern.PatternRegistry;
+import player.Player;
 import player.RandomBot;
 import player.Robot;
 import player.RushBot;
@@ -21,6 +25,14 @@ public class BoardMaster {
 	private BoardMaster(){}
 	
 	private Board board;
+	
+	private int backtrackPenalty;
+	
+	private int chroma;
+	
+	private int sequence;
+	
+	private int bidirectional;
 
 	public static BoardMaster getInstance() {
 		return instance;
@@ -34,9 +46,15 @@ public class BoardMaster {
 		this.board = board;
 	}
 	
-	public void layTheBoard(String exportMin){
+	public void layTheBoard(String exportMin, int chroma, int sequence, int bidirectional){
 		
 		this.board = new Board();
+		
+		this.chroma = chroma;
+		
+		this.sequence = sequence;
+		
+		this.bidirectional = bidirectional;
 		
 		Constellation constellation = new Constellation(Wormhole.class);
 		
@@ -54,7 +72,7 @@ public class BoardMaster {
 				
 				if (!distinctNodeIds.contains(nodes[j]))
 					
-					distinctNodeIds.add(nodes[j]);			
+					distinctNodeIds.add(nodes[j]);
 				
 			}
 			
@@ -92,29 +110,79 @@ public class BoardMaster {
 		
 		// Perform coloring
 		
-		Map<Integer, Set<Star>> chromaticMap = ChromaticNumber.findGreedyColoredGroups(constellation);				
+		if (chroma == 0){
 		
-		Iterator<Integer> chromaIter = chromaticMap.keySet().iterator();
+			Map<Integer, Set<Star>> chromaticMap = ChromaticNumber.findGreedyColoredGroups(constellation);				
+			
+			Iterator<Integer> chromaIter = chromaticMap.keySet().iterator();
+			
+			while (chromaIter.hasNext()){
+				
+				Integer color = chromaIter.next();
+				
+				Set<Star> stars = chromaticMap.get(color);
+				
+				Iterator<Star> starIter = stars.iterator();
+				
+				while (starIter.hasNext()){
+					
+					Star star = starIter.next();
+					
+					star.setColor(color);
+					
+				}
+				
+			}
 		
-		while (chromaIter.hasNext()){
+		} else if (chroma > 0){
+						
+			Iterator<Star> iter = constellation.vertexSet().iterator();
 			
-			Integer color = chromaIter.next();
+			int colors = chroma;
 			
-			Set<Star> stars = chromaticMap.get(color);
-			
-			Iterator<Star> starIter = stars.iterator();
-			
-			while (starIter.hasNext()){
+			while (iter.hasNext()){
 				
-				Star star = starIter.next();
+				int randomNum = ThreadLocalRandom.current().nextInt(colors);
 				
-				star.setColor(color);
+				Star star = iter.next();
+				
+				star.setColor(new Integer(randomNum));
 				
 			}
 			
 		}
 		
+		// Register patterns with weights
+		
+		registerPatterns(constellation);
+		
 		board.setConstellation(constellation);
+		
+	}
+	
+	private void registerPatterns(Constellation constellation){
+		
+		PatternRegistry preg = PatternRegistry.getInstance();
+		
+		preg.register(constellation, sequence, (bidirectional == 1));
+		
+		Iterator<Wormhole> iter = constellation.edgeSet().iterator();
+		
+		while (iter.hasNext()){
+			
+			Wormhole wormhole = iter.next();
+			
+			int totPatterWeight = 0;
+			
+			for (Pattern pattern: wormhole.getPatternMemberships()){
+				
+				totPatterWeight += preg.getPatternWeight(pattern);
+				
+			}
+			
+			wormhole.setWeight(totPatterWeight);
+			
+		}		
 		
 	}
 	
@@ -153,10 +221,12 @@ public class BoardMaster {
 		
 	}
 	
-	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore, int backTrackPenalty, String starHopperMove, int starHopperBid){
+	public void mobilizeTheRobots(int costMultiplier, int stayingBonus, int newStarScore, int backtrackPenalty, String starHopperMove, int starHopperBid){
+		
+		this.backtrackPenalty = backtrackPenalty;
 		
 		if (board.TURN > 0){
-			
+						
 			CrowdMovement crowdMovement = new CrowdMovement(costMultiplier, stayingBonus);		
 			
 			HashMap<String,Star> selectedDestinations = new HashMap<String,Star>();			
@@ -201,27 +271,7 @@ public class BoardMaster {
 				
 				Star destination = selectedDestinations.get(robot.getName());
 							
-				if (!robot.getStarsVisitedThisRound().contains(destination)){
-					
-					robot.setScore(robot.getScore() + newStarScore);
-					
-					if (board.getConstellation().vertexSet().size() == robot.getStarsVisitedThisRound().size() + 1){
-						
-						robot.completeRound();
-						
-					}
-					
-				} else if (!robot.getPosition().equals(destination)){
-					
-					if (robot.getScore() > backTrackPenalty)
-					
-						robot.setScore(robot.getScore() - backTrackPenalty);
-						
-					else
-						
-						robot.setScore(0);
-					
-				}
+				adjustScore(robot, destination);
 				
 				robot.moveToStar(destination);
 				
@@ -233,33 +283,61 @@ public class BoardMaster {
 			
 			board.starHopper.setCredits(board.starHopper.getCredits() + cost);
 			
-			if (!board.starHopper.getStarsVisitedThisRound().contains(starHopperNewPosition)){
-				
-				board.starHopper.setScore(board.starHopper.getScore() + newStarScore);
-				
-				if (board.getConstellation().vertexSet().size() == board.starHopper.getStarsVisitedThisRound().size() + 1){
-					
-					board.starHopper.completeRound();
-					
-				}
-				
-			} else if (!board.starHopper.getPosition().equals(starHopperNewPosition)){
-				
-				if (board.starHopper.getScore() > backTrackPenalty)
-				
-					board.starHopper.setScore(board.starHopper.getScore() - backTrackPenalty);
-					
-				else
-						
-					board.starHopper.setScore(0);
-				
-			}
+			adjustScore(board.starHopper, starHopperNewPosition);
 			
 			board.starHopper.moveToStar(starHopperNewPosition);
 		
 		}
 		
+		// Assign star scores
+		
+		Iterator<Star> iter = board.getConstellation().vertexSet().iterator();
+		
+		while (iter.hasNext()){
+			
+			Star star = iter.next();
+			
+			star.calculateScore(board, newStarScore);
+			
+		}
+		
 		board.TURN++;
+		
+	}
+	
+	public void adjustScore(Player player, Star destination){
+				
+		if (!player.getStarsVisitedThisRound().contains(destination)){
+			
+			player.setScore(player.getScore() + destination.score);
+			
+			if (board.getConstellation().vertexSet().size() == player.getStarsVisitedThisRound().size() + 1){
+				
+				player.completeRound();
+				
+			}
+			
+		} else if (!player.getPosition().equals(destination)){
+			
+			if (player.getScore() > backtrackPenalty)
+			
+				player.setScore(player.getScore() - backtrackPenalty);
+				
+			else
+				
+				player.setScore(0);
+			
+		}		
+		
+	}
+	
+	public void applyAnomaly(String anomalyNode, int color){
+		
+		Star star = board.getStar(anomalyNode);
+		
+		star.setColor(color);
+		
+		registerPatterns(board.getConstellation());
 		
 	}
 	

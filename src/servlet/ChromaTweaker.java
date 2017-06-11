@@ -13,15 +13,15 @@ import json.InitializationJSON;
 import util.JsonUtil;
 
 /**
- * Servlet implementation class GameInitializer
+ * Servlet implementation class ChromaTweaker
  */
-public class GameInitializer extends HttpServlet {
+public class ChromaTweaker extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GameInitializer() {
+    public ChromaTweaker() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,45 +34,19 @@ public class GameInitializer extends HttpServlet {
 		
 		String result = null;
 		
-		String exportMin = request.getParameter("min");
+		String anomalyNode = request.getParameter("anomaly");
 		
-		String startingNodeId = request.getParameter("start");
+		int color = Integer.parseInt(request.getParameter("color"));
 		
-		int startingCredits = Integer.parseInt(request.getParameter("creds"));
+		System.out.println("========= TWEAKING CHROMA =========");
 		
-		int totRandomBots = Integer.parseInt(request.getParameter("rnds"));
+		System.out.println("anomalyNode="+anomalyNode);
 		
-		int totRushBots = Integer.parseInt(request.getParameter("rush"));
-		
-		int chroma = Integer.parseInt(request.getParameter("chrm"));
-		
-		int sequence = Integer.parseInt(request.getParameter("exseq"));
-		
-		int bidirectional = Integer.parseInt(request.getParameter("exbid"));
-		
-		System.out.println("========= INITIALIZING =========");
-		
-		System.out.println("exportMin="+exportMin);
-		
-		System.out.println("startingNodeId="+startingNodeId);
-		
-		System.out.println("startingCredits="+startingCredits);
-		
-		System.out.println("totRandomBots="+totRandomBots);
-		
-		System.out.println("totRushBots="+totRushBots);
-		
-		System.out.println("chroma="+chroma);
-		
-		System.out.println("sequence="+sequence);
-		
-		System.out.println("bidirectional="+bidirectional);
+		System.out.println("color="+color);
 		
 		BoardMaster boardMaster = BoardMaster.getInstance();
 		
-		boardMaster.layTheBoard(exportMin, chroma, sequence, bidirectional);
-		
-		boardMaster.sitThePlayers(startingNodeId, startingCredits, totRandomBots, totRushBots);
+		boardMaster.applyAnomaly(anomalyNode, color);
 		
 		InitializationJSON initialization = FactoryJSON.makeInitialization(boardMaster.getBoard());
 		
@@ -91,7 +65,7 @@ public class GameInitializer extends HttpServlet {
 		
 		response.getWriter().flush();
 		
-		response.getWriter().close();
+		response.getWriter().close();		
 		
 	}
 

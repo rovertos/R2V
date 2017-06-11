@@ -1,10 +1,18 @@
 package board;
 
-import org.jgrapht.graph.DefaultEdge;
+import java.util.ArrayList;
 
-public class Wormhole extends DefaultEdge {
+import org.jgrapht.graph.DefaultWeightedEdge;
+
+import pattern.Pattern;
+
+public class Wormhole extends DefaultWeightedEdge {
 
 	private static final long serialVersionUID = 1L;
+	
+	private ArrayList<Pattern> patternMemberships = new ArrayList<Pattern>();
+	
+	private double weight;
 	
 	public Star getSource(){
 		
@@ -16,8 +24,35 @@ public class Wormhole extends DefaultEdge {
 		
 		return (Star)super.getTarget();
 		
-	}
+	}	
 	
+	public ArrayList<Pattern> getPatternMemberships() {
+		
+		return patternMemberships;
+		
+	}
+
+	public void addPatternMembership(Pattern pattern){
+		
+		if (!patternMemberships.contains(pattern))
+			
+			patternMemberships.add(pattern);
+		
+	}	
+	
+	@Override
+	public double getWeight() {
+		
+		return weight;
+		
+	}
+
+	public void setWeight(double weight) {
+		
+		this.weight = weight;
+		
+	}
+
 	public Star getExitPoint(Star entryPoint){
 		
 		if (entryPoint.getName().equals(getSource().getName()))

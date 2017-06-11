@@ -8,6 +8,9 @@ import java.util.List;
 
 import board.Board;
 import board.Star;
+import board.Wormhole;
+import pattern.Pattern;
+import pattern.PatternRegistry;
 import player.Player;
 import player.RandomBot;
 import player.RobotTypes;
@@ -32,6 +35,8 @@ public class FactoryJSON {
 			CrowdJSON crowd = new CrowdJSON();
 			
 			crowd.setStarId(star.getName());
+			
+			crowd.setScore(star.score);
 			
 			crowd.setVisited(star.getPlayersVisited().size());
 			
@@ -187,13 +192,13 @@ public class FactoryJSON {
 		
 		InitializationJSON initialization = new InitializationJSON();
 		
-		Iterator<Star> iter = board.getConstellation().vertexSet().iterator();
+		Iterator<Star> sIter = board.getConstellation().vertexSet().iterator();
 		
 		ArrayList<StarJSON> stars = new ArrayList<StarJSON>();
 		
-		while (iter.hasNext()){
+		while (sIter.hasNext()){
 			
-			Star star = iter.next();
+			Star star = sIter.next();
 			
 			StarJSON starJSON = new StarJSON();
 			
@@ -205,7 +210,69 @@ public class FactoryJSON {
 			
 		}
 		
+		ArrayList<WormholeJSON> wormholes = new ArrayList<WormholeJSON>();
+		
+		PatternRegistry preg = PatternRegistry.getInstance();
+		
+		Iterator<Wormhole> wIter = board.getConstellation().edgeSet().iterator();
+		
+		while (wIter.hasNext()){
+			
+			Wormhole wormhole = wIter.next();
+			
+			WormholeJSON wormholeJSON = new WormholeJSON();
+						
+			wormholeJSON.setName(wormhole.getSource().getName() + "_" + wormhole.getTarget().getName());
+			
+			wormholeJSON.setWeight((int)wormhole.getWeight());
+			
+			ArrayList<String> patternStrings = new ArrayList<String>();
+			
+			ArrayList<Pattern> patterns = wormhole.getPatternMemberships();
+			
+			for (Pattern pattern: patterns){
+				
+				patternStrings.add(pattern.toString());
+				
+			}
+			
+			wormholeJSON.setPatterns(patternStrings);
+			
+			wormholes.add(wormholeJSON);
+			
+		}
+		
 		initialization.setStars(stars);
+		
+		Collections.sort(wormholes);
+		
+		double minWeight = wormholes.get(wormholes.size()-1).getWeight();
+		
+		for (WormholeJSON wormhole: wormholes){
+			
+			wormhole.setWeight(wormhole.getWeight()/minWeight);
+			
+		}		
+		
+		initialization.setWormholes(wormholes);
+		
+		ArrayList<PatternJSON> patterns = new ArrayList<PatternJSON>();
+		
+		for (Pattern pattern: preg.getPatterns()){
+			
+			PatternJSON patternJSON = new PatternJSON();
+			
+			patternJSON.setSequence(pattern.getSequence());
+			
+			patternJSON.setWeight(preg.getPatternWeight(pattern));
+			
+			patterns.add(patternJSON);
+			
+		}
+		
+		Collections.sort(patterns);
+		
+		initialization.setPatterns(patterns);
 		
 		return initialization;
 		
