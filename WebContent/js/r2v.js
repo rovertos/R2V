@@ -351,16 +351,18 @@ Game = {
 	
 	tweakChroma: function(anomalyNode,color){
 		
-		Game.patterns = [];
-		
-		Game.wormholes = [];		
-		
 		$.ajax({
 		    type: "POST",  
 		    url: "http://localhost:8080/R2V/tweak",
 		    data: { anomaly: anomalyNode, color: color },
 		    dataType: "json",
 		    success: function(data) {
+		    	
+				Game.patterns = [];
+				
+				Game.wormholes = [];
+				
+				console.log(data);
 		    	
 				$.each(data.stars, function(i,star){
 					

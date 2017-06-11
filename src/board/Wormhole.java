@@ -24,7 +24,13 @@ public class Wormhole extends DefaultWeightedEdge {
 		
 		return (Star)super.getTarget();
 		
-	}	
+	}
+	
+	public String getName(){
+		
+		return getSource().getName() + "_" + getTarget().getName();
+		
+	}
 	
 	public ArrayList<Pattern> getPatternMemberships() {
 		
@@ -33,12 +39,20 @@ public class Wormhole extends DefaultWeightedEdge {
 	}
 
 	public void addPatternMembership(Pattern pattern){
-		
-		if (!patternMemberships.contains(pattern))
+				
+		if (!patternMemberships.contains(pattern)){
 			
 			patternMemberships.add(pattern);
+						
+		}
 		
-	}	
+	}
+	
+	public void clearMemberships(){
+		
+		patternMemberships.clear();
+		
+	}
 	
 	@Override
 	public double getWeight() {

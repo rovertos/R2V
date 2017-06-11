@@ -37,11 +37,21 @@ public class PatternRegistry {
 		
 		this.bidirectional = bidirectional;
 		
-		Iterator<Star> iter = constellation.vertexSet().iterator();
+		Iterator<Wormhole> wIter = constellation.edgeSet().iterator();
 		
-		while (iter.hasNext()){
+		while (wIter.hasNext()){
+			
+			Wormhole wormhole = wIter.next();
+			
+			wormhole.clearMemberships();
+			
+		}
+		
+		Iterator<Star> sIter = constellation.vertexSet().iterator();
+		
+		while (sIter.hasNext()){
 						
-			Star star = iter.next();
+			Star star = sIter.next();
 			
 			ArrayList<Star> starsCrawled = new ArrayList<Star>();
 			
@@ -49,65 +59,69 @@ public class PatternRegistry {
 			
 			ArrayList<Integer> sequenceCrawled = new ArrayList<Integer>();
 			
+			//System.out.println(">>>>>>>>>>>>>>>>>> " + star.getName() + " >>>>>>>>>>>>>>>>>>");			
+			
 			this.crawlStarsForPatterns(constellation, star, starsCrawled, wormholesCrawled, sequenceCrawled);
+			
+			//System.out.println("<<<<<<<<<<<<<<<<< " + star.getName() + " <<<<<<<<<<<<<<<<<");
 			
 		}
 		
 	}
 	
 	private void crawlStarsForPatterns(Constellation constellation, Star star, List<Star> starsCrawled, List<Wormhole> wormholesCrawled, List<Integer> sequenceCrawled){
-		
-		Set<Wormhole> wormholeSet = constellation.edgesOf(star);
-		
-		Iterator<Wormhole> iter = wormholeSet.iterator();		
-		
+				
 		if (sequenceCrawled.size() == patternLength-1){
+					
+			ArrayList<Integer> newSequence = new ArrayList<Integer>(sequenceCrawled);
+			
+			newSequence.add(star.getColor());
+			
+			Pattern pattern = new Pattern(newSequence, bidirectional);
+			
+			//System.out.println("@@ " + star.getName() + " " + star.getColor() + " REGISTER " + pattern.toString() + " for " + wormholesCrawled.get(0).getName() + " and " + wormholesCrawled.get(1).getName());
+			
+			this.registerPattern(pattern, wormholesCrawled);
+			
+		} else {
+			
+			ArrayList<Star> newStarsCrawled = new ArrayList<Star>(starsCrawled);
+			
+			newStarsCrawled.add(star);
+			
+			Set<Wormhole> wormholeSet = constellation.edgesOf(star);
+			
+			//System.out.println("@STAR " + star.getName() + " " + star.getColor());
+			
+			Iterator<Wormhole> iter = wormholeSet.iterator();
+			
+			ArrayList<Integer> newSequence = new ArrayList<Integer>(sequenceCrawled);
+			
+			newSequence.add(star.getColor());
 			
 			while (iter.hasNext()){
 				
 				Wormhole wormhole = iter.next();
+				
+				//System.out.println("@WORM " + wormhole.getSource().getName() + "_" + wormhole.getTarget().getName());
 				
 				Star destination = wormhole.getExitPoint(star);
 				
 				if (!starsCrawled.contains(destination)){
 					
-					ArrayList<Integer> newSequence = new ArrayList<Integer>(sequenceCrawled);
-					
-					newSequence.add(destination.getColor());
-					
 					ArrayList<Wormhole> newWormholes = new ArrayList<Wormhole>(wormholesCrawled);
 					
 					newWormholes.add(wormhole);
 					
-					Pattern pattern = new Pattern(newSequence, bidirectional);
+					//System.out.println("-MOVE to " + destination.getName() + " " + destination.getColor());
 					
-					this.registerPattern(pattern, newWormholes);
+					crawlStarsForPatterns(constellation, destination, newStarsCrawled, newWormholes, newSequence);
+				
+				} else {
+					
+					//System.out.println("-SKIP " + destination.getName());
 					
 				}
-				
-			}
-			
-		} else {
-			
-			while (iter.hasNext()){
-				
-				Wormhole wormhole = iter.next();
-				
-				Star destination = wormhole.getExitPoint(star);
-				
-				ArrayList<Star> newStarsCrawled = new ArrayList<Star>(starsCrawled);
-				
-				newStarsCrawled.add(destination);
-				
-				ArrayList<Integer> newSequence = new ArrayList<Integer>(sequenceCrawled);
-				
-				newSequence.add(destination.getColor());
-				
-				ArrayList<Wormhole> newWormholes = new ArrayList<Wormhole>(wormholesCrawled);
-				
-				newWormholes.add(wormhole);
-				
-				crawlStarsForPatterns(constellation, destination, newStarsCrawled, newWormholes, newSequence);
 				
 			}
 			

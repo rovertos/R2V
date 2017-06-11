@@ -222,7 +222,7 @@ public class FactoryJSON {
 			
 			WormholeJSON wormholeJSON = new WormholeJSON();
 						
-			wormholeJSON.setName(wormhole.getSource().getName() + "_" + wormhole.getTarget().getName());
+			wormholeJSON.setName(wormhole.getName());
 			
 			wormholeJSON.setWeight((int)wormhole.getWeight());
 			
