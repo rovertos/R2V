@@ -38,6 +38,8 @@ Interface = {
 		
 		$("#AnomalyColor").selectmenu();
 		
+		$("#EdgeBoost").selectmenu();		
+		
 		$("#Sequence").spinner({
 			  min: 2,
 			  max: 6
@@ -48,6 +50,12 @@ Interface = {
 			Graph.load(null);
 			
 			return false;
+			
+		});
+		
+		$("#EdgeBoost").on("selectmenuselect", function(event, ui) {
+			
+			Graph.edgeBoost = $(this).val();			
 			
 		});
 		
