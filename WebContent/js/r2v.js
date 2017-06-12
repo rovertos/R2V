@@ -27,15 +27,20 @@ $(document).ready(function(){
 		        break;
 		    }	  
 	  
-	  var weight;
 	  
-	  if (Game.wormholes[source.id + "_" + target.id]){
+	  //int edgeBoost = $("#EdgeBoost").val();
+
+	  var weight;	  
+	  var eName = source.id + "_" + target.id;	  
+	  var eReverse = target.id + "_" + source.id;
+	  
+	  if (Game.wormholes[eName]){
 		  
-		  weight = (Game.wormholes[source.id + "_" + target.id].weight - 1)*10+1;
+		  weight = Graph.edgeBoost == 0 ? (Game.wormholes[eName].weight - 1)*10+1 : Game.wormholes[eName].patterns.length*2;
 		  
-	  } else if (Game.wormholes[target.id + "_" + source.id]){
+	  } else if (Game.wormholes[eReverse]){
 		  
-		  weight = (Game.wormholes[target.id + "_" + source.id].weight - 1)*10+1;
+		  weight = Graph.edgeBoost == 0 ? (Game.wormholes[eReverse].weight - 1)*10+1 : Game.wormholes[eReverse].patterns.length*2;
 		  
 	  } else {
 		  
