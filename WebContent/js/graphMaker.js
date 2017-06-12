@@ -14,6 +14,8 @@ Graph = {
 	
 	defaultNodeColor: 'WhiteSmoke',
 	
+	edgeBoost: 0,
+	
 	images: [		
 		'img/ng.png',
 		'img/nb.png',
