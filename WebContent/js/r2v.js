@@ -513,16 +513,18 @@ Game = {
 		if (data.starHopper.credits <= Game.posStars[data.starHopper.location].total * $("#CostMultiplier").val()){
 			
 			if (!Game.playerTrapped)
-				
+					
 				Game.startAuto();
 			
 			Game.playerTrapped = true;
 			
 		} else {
 			
-			Game.playerTrapped = false;
+			if (Game.playerTrapped)
+				
+				Game.stopAuto();
 			
-			Game.stopAuto();
+			Game.playerTrapped = false;
 			
 		}
 		

@@ -168,9 +168,15 @@
 				  </p>
 				 </fieldset>
 			</form>
-			<h3>Chroma Anomaly</h3>
+			<h3>Chroma Tuning</h3>
 			<form>
-				<fieldset style="border: 0px">	
+				<fieldset style="border: 0px">
+				  <label for="EdgeBoost">EdgeBoost:</label>		  
+				  <select name="EdgeBoost" id="EdgeBoost">
+				  	<option value="0" selected="selected">Weight of Patterns</option>
+				  	<option value="1">Number of Patterns</option> 	
+				  </select>
+				  <p/>				
 				  <label for="AnomalyNode">AnomalyNode:</label>
 				  <select name="AnomalyNode" class="NodeList" id="AnomalyNode"></select>
 				  <p/>
@@ -187,6 +193,34 @@
 				  </p>				  				  		
 				</fieldset>
 			</form>
+		</div>
+		
+		<div id="patterns" class="ui-widget-content">
+			<p>
+			<table id="patternTable">
+				<tr>
+					<td class="c0"></td>
+					<td class="c1"></td>
+					<td class="c3"></td>
+					<td class="void"></td>
+					<td><input class="sbut" id="sbut6" type="button"/></td>
+				</tr>
+				<tr>
+					<td class="c0"></td>
+					<td class="c2"></td>
+					<td class="void"></td>
+					<td class="void"></td>
+					<td><input class="sbut" id="sbut6" type="button"/></td>					
+				</tr>
+				<tr>
+					<td class="c1"></td>
+					<td class="c0"></td>
+					<td class="void"></td>
+					<td class="void"></td>
+					<td><input class="sbut" id="sbut6" type="button"/></td>
+				</tr>			
+			</table>
+			</p>
 		</div>
 		
 		<div id="nodeTip"></div>

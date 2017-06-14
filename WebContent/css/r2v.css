@@ -23,8 +23,6 @@ body {
 
 	z-index: 0;
 	
-
-	
 }
 
 .sbut {
@@ -324,5 +322,89 @@ body {
 #GraphString {
 	
 	color: gray;
+	
+}
+
+#patterns {
+	
+    width: 290px;
+    
+    z-index: 150;
+    
+    margin-top: 20px;    
+    
+    margin-left: 20px;
+    
+    box-shadow: 5px 5px #888888;
+    
+    padding-left: 10px;
+    
+    background: #eeeeee;
+	
+}
+
+#patternTable {
+	
+	 padding-top: 10px;
+	
+}
+
+#patternTable td {
+	
+	 border: 0px;
+	 
+	 width: 50px;
+	 
+	 height: 50px;
+	 
+	 background-position: center;
+	 
+	 cursor: pointer;
+	
+}
+
+#patternTable td.c0{
+
+	 background: url("../img/ng.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.c1{
+
+	 background: url("../img/nb.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.c2{
+
+	 background: url("../img/no.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.c3{
+
+	 background: url("../img/np.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.nr{
+
+	 background: url("../img/ng.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.void{
+
+	 cursor: default;	 
 	
 }

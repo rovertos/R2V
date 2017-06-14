@@ -4,6 +4,8 @@ Interface = {
 		
 		$("#interface").accordion().draggable();
 		
+		$("#patterns").draggable();
+		
 		var defaultGraph = "n0,n2,n3,n4,n5,n1-n1,n7,n8-n2,n6,n7-n3,n6,n10-n4,n9,n10-n5,n8,n9-n6,n11,n12,n19-n7,n12,n13,n17-"+
 							"n8,n13,n14,n25-n9,n14,n15,n23-n10,n11,n15,n21-n11,n20-n12,n18-n13,n16-n14,n24-n15,n22-n16,n17,n25-"+
 							"n17,n18-n18,n19-n19,n20-n20,n21-n21,n22-n22,n23-n23,n24-n24,n25-n25";
@@ -55,7 +57,9 @@ Interface = {
 		
 		$("#EdgeBoost").on("selectmenuselect", function(event, ui) {
 			
-			Graph.edgeBoost = $(this).val();			
+			Graph.edgeBoost = $(this).val();
+			
+			Graph.s.refresh({ skipIndexation: true });
 			
 		});
 		
@@ -92,8 +96,6 @@ Interface = {
 	enableStartGame: function(){
 		
 		$(".NodeList").each(function(){
-			
-			console.log($(this));
 			
 			$(this).selectmenu('destroy');
 			
