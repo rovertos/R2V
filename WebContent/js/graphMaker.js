@@ -16,7 +16,7 @@ Graph = {
 	
 	edgeBoost: 0,
 	
-	images: [		
+	images: [
 		'img/ng.png',
 		'img/nb.png',
 		'img/no.png',

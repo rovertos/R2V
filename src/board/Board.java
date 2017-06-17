@@ -23,6 +23,8 @@ public class Board {
 	
 	private PatternRegistry preg;
 	
+	private int chroma;
+	
 	public int TURN = 0;
 	
 	public Star getStar(String nodeId){
@@ -79,8 +81,16 @@ public class Board {
 		
 	}
 
-	public void setRobots(List<Robot> robots) {
-		this.robots = robots;
+	public int getChroma() {
+		return chroma;
+	}
+
+	public void setChroma(int chroma) {
+		this.chroma = chroma;
+	}
+
+	public void setRobots(List<Robot> robots) {		
+		this.robots = robots;		
 	}
 	
 }

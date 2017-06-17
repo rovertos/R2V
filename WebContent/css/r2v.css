@@ -25,7 +25,7 @@ body {
 	
 }
 
-.sbut {
+.but {
 	
 	width: 49px;
 	
@@ -37,7 +37,7 @@ body {
 	
 }
 
-.sbut:active {
+.but:active {
 	
 	width: 49px;
 	
@@ -61,67 +61,43 @@ body {
 	
 }
 
-#sbut2 {
+#sbut2, #sbut3, .but.green {
 	
 	background:url(../img/green_button07.png) no-repeat;	
 	
 }
 
-#sbut2:active {
+#sbut2:active, #sbut3:active, .but.green:active {
 	
 	background:url(../img/green_button08.png) no-repeat;	
 	
 }
 
-#sbut3 {
-	
-	background:url(../img/green_button07.png) no-repeat;	
-	
-}
-
-#sbut3:active {
-	
-	background:url(../img/green_button08.png) no-repeat;	
-	
-}
-
-#sbut4 {
+#sbut4, #sbut5 {
 	
 	background:url(../img/blue_button07.png) no-repeat;	
 	
 }
 
-#sbut4:active {
+#sbut4:active, #sbut5:active {
 	
 	background:url(../img/blue_button08.png) no-repeat;	
 	
 }
 
-#sbut5 {
-	
-	background:url(../img/blue_button07.png) no-repeat;	
-	
-}
-
-#sbut5:active {
-	
-	background:url(../img/blue_button08.png) no-repeat;	
-	
-}
-
-#sbut6 {
+#sbut6, .but.red {
 	
 	background:url(../img/red_button04.png) no-repeat;	
 	
 }
 
-#sbut6:active {
+#sbut6:active, .but.red:active {
 	
 	background:url(../img/red_button05.png) no-repeat;
 	
 }
 
-.sbut.disabled {
+.but.disabled {
 	
 	background:url(../img/grey_button10.png) no-repeat !important;
 	
@@ -235,7 +211,7 @@ body {
     
     margin-left: 120px;
     
-    background-image: url('../img/M280x100.png');  	
+    background-image: url('../img/M280x100.png');
 	
 }
 
@@ -351,8 +327,6 @@ body {
 
 #patternTable td {
 	
-	 border: 0px;
-	 
 	 width: 50px;
 	 
 	 height: 50px;
@@ -367,7 +341,7 @@ body {
 
 	 background: url("../img/ng.png") no-repeat;
 	 
-	 cursor: pointer;	 
+	 cursor: pointer;
 	
 }
 
@@ -395,13 +369,62 @@ body {
 	
 }
 
-#patternTable td.nr{
+#patternTable td.c4{
 
-	 background: url("../img/ng.png") no-repeat;
+	 background: url("../img/nr.png") no-repeat;
 	 
 	 cursor: pointer;	 
 	
 }
+
+#patternTable td.nr{
+
+	 background-image: url("../img/ng.png") no-repeat;
+	 
+	 cursor: pointer;
+	
+}
+
+#patternTable td.h0{
+
+	 background: url("../img/ngh.png") no-repeat;
+	 
+	 cursor: pointer;
+	
+}
+
+#patternTable td.h1{
+
+	 background: url("../img/nbh.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.h2{
+
+	 background: url("../img/noh.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.h3{
+
+	 background: url("../img/nph.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
+#patternTable td.h4{
+
+	 background: url("../img/nrh.png") no-repeat;
+	 
+	 cursor: pointer;	 
+	
+}
+
 
 #patternTable td.void{
 

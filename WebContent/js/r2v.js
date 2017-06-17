@@ -14,6 +14,28 @@ $(document).ready(function(){
 	      defaultNodeColor = settings('defaultNodeColor'),
 	      defaultEdgeColor = settings('defaultEdgeColor');
 
+
+	  var weight = 1;
+	  
+	  var eName = source.id + "_" + target.id;
+	  
+	  var wormhole = Game.getWormhole(source.id, target.id);
+	  
+	  if (wormhole){
+		  
+		  weight = Graph.edgeBoost == 0 ? (wormhole.weight - 1)*10+1 : wormhole.patterns.length*2;
+		  
+		  eName = wormhole.name;
+		  
+	  }
+	  
+	  
+	  if (Chroma.foundEdges.indexOf(eName) > -1){
+		  
+		  color = 'white';
+		  
+	  } else {
+	  	  
 	  if (!color)
 		    switch (edgeColor) {
 		      case 'source':
@@ -25,28 +47,10 @@ $(document).ready(function(){
 		      default:
 		        color = defaultEdgeColor;
 		        break;
-		    }	  
+		    }
 	  
-	  
-	  //int edgeBoost = $("#EdgeBoost").val();
-
-	  var weight;	  
-	  var eName = source.id + "_" + target.id;	  
-	  var eReverse = target.id + "_" + source.id;
-	  
-	  if (Game.wormholes[eName]){
-		  
-		  weight = Graph.edgeBoost == 0 ? (Game.wormholes[eName].weight - 1)*10+1 : Game.wormholes[eName].patterns.length*2;
-		  
-	  } else if (Game.wormholes[eReverse]){
-		  
-		  weight = Graph.edgeBoost == 0 ? (Game.wormholes[eReverse].weight - 1)*10+1 : Game.wormholes[eReverse].patterns.length*2;
-		  
-	  } else {
-		  
-		  weight = 1;
-		  
 	  }
+	  
 	  	  
 	  context.strokeStyle = color;
 	  context.lineWidth = weight;
@@ -258,6 +262,8 @@ $(document).ready(function(){
 		
 	});
 	
+	Chroma.init();
+	
 	Designer.init();
 	
 });
@@ -344,6 +350,8 @@ Game = {
 					Game.wormholes[wormhole.name] = wormhole;
 					
 				});				
+				
+				Chroma.max = data.chroma;
 				
 				Game.move();
 				
@@ -565,6 +573,22 @@ Game = {
 			NodeTip.defeat.show();
 			
 		}		
+		
+	},
+	
+	getWormhole: function(node1,node2){
+		
+		var straight = node1 + "_" + node2;
+		
+		var reverse = node2 + "_" + node1;
+				
+		if (Game.wormholes[straight])
+			
+			return Game.wormholes[straight];
+		
+		else
+			
+			return Game.wormholes[reverse];
 		
 	}
 		

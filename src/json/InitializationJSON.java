@@ -11,7 +11,9 @@ public class InitializationJSON implements Serializable {
 	
 	private List<WormholeJSON> wormholes;
 	
-	private List<PatternJSON> patterns;	
+	private List<PatternJSON> patterns;
+	
+	private int chroma;
 
 	public List<StarJSON> getStars() {
 		
@@ -48,7 +50,17 @@ public class InitializationJSON implements Serializable {
 		this.patterns = patterns;
 		
 	}
-	
-	
+
+	public int getChroma() {
+		
+		return chroma;
+		
+	}
+
+	public void setChroma(int chroma) {
+		
+		this.chroma = chroma;
+		
+	}	
 
 }

@@ -274,6 +274,8 @@ public class FactoryJSON {
 		
 		initialization.setPatterns(patterns);
 		
+		initialization.setChroma(board.getChroma());
+		
 		return initialization;
 		
 	}

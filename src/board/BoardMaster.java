@@ -28,8 +28,6 @@ public class BoardMaster {
 	
 	private int backtrackPenalty;
 	
-	private int chroma;
-	
 	private int sequence;
 	
 	private int bidirectional;
@@ -50,7 +48,7 @@ public class BoardMaster {
 		
 		this.board = new Board();
 		
-		this.chroma = chroma;
+		this.board.setChroma(chroma);
 		
 		this.sequence = sequence;
 		
@@ -116,7 +114,11 @@ public class BoardMaster {
 			
 			Iterator<Integer> chromaIter = chromaticMap.keySet().iterator();
 			
+			int chromaticNumber = 0;
+			
 			while (chromaIter.hasNext()){
+				
+				chromaticNumber++;
 				
 				Integer color = chromaIter.next();
 				
@@ -133,6 +135,8 @@ public class BoardMaster {
 				}
 				
 			}
+			
+			this.board.setChroma(chromaticNumber);
 		
 		} else if (chroma > 0){
 						

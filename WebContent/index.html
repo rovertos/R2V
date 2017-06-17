@@ -14,7 +14,8 @@
 		<script src="js/opentip-jquery.min.js"></script>				
 		<script src="js/r2v.js"></script>
 		<script src="js/interface.js"></script>
-		<script src="js/graphMaker.js"></script>	
+		<script src="js/graphMaker.js"></script>
+		<script src="js/chroma.js"></script>	
 		<script src="js/adapter-jquery.js"></script>			
 		<script src="js/plugins/sigma.plugins.neighborhoods.min.js"></script>	
 		<script src="js/jsrender.min.js"></script>
@@ -36,12 +37,12 @@
 				<div class="clear"></div>
 			</div>
 			<div id="mid-panel">
-				<input class="sbut" id="sbut1" type="button"/>
-				<input class="sbut" id="sbut2" type="button"/>
-				<input class="sbut" id="sbut3" type="button"/>
-				<input class="sbut" id="sbut4" type="button"/>
-				<input class="sbut" id="sbut5" type="button"/>
-				<input class="sbut" id="sbut6" type="button"/>					
+				<input class="but" id="sbut1" type="button"/>
+				<input class="but" id="sbut2" type="button"/>
+				<input class="but" id="sbut3" type="button"/>
+				<input class="but" id="sbut4" type="button"/>
+				<input class="but" id="sbut5" type="button"/>
+				<input class="but" id="sbut6" type="button"/>					
 			</div>
 			<div id="bottom-panel">
 				<div id="control">
@@ -199,26 +200,26 @@
 			<p>
 			<table id="patternTable">
 				<tr>
-					<td class="c0"></td>
-					<td class="c1"></td>
-					<td class="c3"></td>
-					<td class="void"></td>
-					<td><input class="sbut" id="sbut6" type="button"/></td>
+					<td id="0_0" class="chroma"></td>
+					<td id="0_1" class="chroma"></td>
+					<td id="0_2" class="chroma"></td>
+					<td id="0_3" class="chroma"></td>
+					<td><input class="but pbut red" id="pbut1" type="button"/></td>
 				</tr>
 				<tr>
-					<td class="c0"></td>
-					<td class="c2"></td>
-					<td class="void"></td>
-					<td class="void"></td>
-					<td><input class="sbut" id="sbut6" type="button"/></td>					
+					<td id="1_0" class="chroma"></td>
+					<td id="1_1" class="chroma"></td>
+					<td id="1_2" class="chroma"></td>
+					<td id="1_3" class="chroma"></td>
+					<td><input class="but pbut red" id="pbut2" type="button"/></td>
 				</tr>
 				<tr>
-					<td class="c1"></td>
-					<td class="c0"></td>
-					<td class="void"></td>
-					<td class="void"></td>
-					<td><input class="sbut" id="sbut6" type="button"/></td>
-				</tr>			
+					<td id="2_0" class="chroma"></td>
+					<td id="2_1" class="chroma"></td>
+					<td id="2_2" class="chroma"></td>
+					<td id="2_3" class="chroma"></td>
+					<td><input class="but pbut red" id="pbut3" type="button"/></td>
+				</tr>
 			</table>
 			</p>
 		</div>
